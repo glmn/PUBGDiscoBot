@@ -1,9 +1,8 @@
 import discord
 from pubg_python import PUBG, Shard
 from imgrender import renderImage
+from tokens import dTOKEN, pTOKEN
 
-dTOKEN = 'NDg1MjE0MDg4NzYzNTM5NDY2.DmtSuA.xUiY4ahYmp0VtGwwmMTNK2NMqsw'
-pTOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyNjFhNDM5MC04NjNmLTAxMzYtMTJiZS0zZDI5Y2M5NzQ1MmQiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTM0NzI1NDUyLCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6Ii05ODEyY2U3Mi1jYjMzLTQ4ZTAtYmM1MS0xYjg4MGM1MzViZGUifQ.rZwUncv-MAnPvAF2sfVlay8kN1akOwl46TkTAHKCLvo'
 
 pubg = PUBG(pTOKEN, Shard.PC_RU)
 bot = discord.Client()
