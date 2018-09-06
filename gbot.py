@@ -58,22 +58,19 @@ async def trackPlayers():
           await asyncio.sleep(60)
           continue
         else:
-          match = pubg.matches().get(matchId)
-          match.created_at
-          gameMode = match.game_mode
-          mapName = match.map_name
-          roster = findRosterByName(player.name, match.rosters)
-          rank = roster.stats['rank']
-          teamMates = roster.participants
-          if(renderImage(mapName, gameMode, rank, teamMates, len(match.rosters))):
-            analysed_matches.append(matchId)
-            await bot.send_file(discord.Object(id='370294822436864002'), 'x.png') 
+          m = pubg.matches().get(matchId)
+          r = findRosterByName(player.name, m.rosters)
+          analysed_matches.append(matchId)
+          if(r.stats['rank'] <= 3):
+            renderImage(m.map_name, m.game_mode, r.stats['rank'], r.participants, len(m.rosters))
+            await bot.send_file(discord.Object(id='370294822436864002'), 'x.png')
     await asyncio.sleep(60)
+
 
 @bot.event
 async def on_ready():
   print(bot.user.name)
-  await bot.change_presence(game=discord.Game(name='Хуев ПАБГ'))
+  await bot.change_presence(game=discord.Game(name='Херов ПАБГ'))
   bot.loop.create_task(trackPlayers())
 
 
@@ -86,11 +83,11 @@ async def track(ctx, login):
     result = await findLoginInPUBG(login)
     if(result is True):
       player_names[authorId] = login
-      await bot.say("{} Ник {} отслеживается.".format(authorMention, login))
+      await bot.say("{} Аккаунт {} отслеживается.".format(authorMention, login))
     else:
-      await bot.say("{} Ник {} не найден.".format(authorMention, login))
+      await bot.say("{} Аккаунт {} не найден.".format(authorMention, login))
   else:
-    await bot.say("{} Вы уже отслеживаете ник {}.".format(authorMention, player_names[authorId]))
+    await bot.say("{} Вы уже отслеживаете Аккаунт {}.".format(authorMention, player_names[authorId]))
 
 
 @bot.command(pass_context=True)
@@ -98,20 +95,29 @@ async def untrack(ctx):
   global player_names
   authorId = ctx.message.author.id
   authorMention = ctx.message.author.mention
+  print(ctx.message__dict__)
   if(authorId in player_names):
-    await bot.say("{} Прекращаю отслеживать ник {}".format(authorMention, player_names[authorId]))
+    await bot.say("{} Прекращаю отслеживать Аккаунт {}".format(authorMention, player_names[authorId]))
     del player_names[authorId]
   else:
     await bot.say("{} Было бы что отслеживать...".format(authorMention))
+
+
+# @bot.command(pass_context=True)
+# async def debug(ctx, variable):
+#   print(eval(variable))
+#   await bot.say(str(eval(variable)))
 
 
 @bot.command(pass_context=True)
 async def help(ctx):
   helpmsg = '''
   ```css
-  P#BG -Трэкинг последних матчей и отображение статистики\n
-  !track %nick%: Добавить отслеживание пользователя %nick%
-  !untrack: Отменить отслеживание```
+  P#BG -Трекинг последних матчей и отображение статистики\n
+  !track %nick%: Добавить отслеживание Аккаунта %nick%
+  !untrack: Отменить отслеживание
+
+  !debug %variable%: (debug global variables)```
   '''
   await bot.say(helpmsg)
 
