@@ -1,4 +1,5 @@
 # PUBGDiscoBot
+##### Just example (not a working porject)
 Push to discord server after match statistics
 
 ##### Example
