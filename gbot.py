@@ -77,7 +77,6 @@ async def trackPlayers():
 @bot.command()
 async def track(ctx, login):
   global player_names
-  authorId = ctx.message.author.id
   authorMention = ctx.message.author.mention
   if(login not in player_names):
     result = await findLoginInPUBG(login)
@@ -93,7 +92,6 @@ async def track(ctx, login):
 @bot.command()
 async def untrack(ctx, login):
   global player_names
-  authorId = ctx.message.author.id
   authorMention = ctx.message.author.mention
   print(ctx.message__dict__)
   if(login in player_names):
