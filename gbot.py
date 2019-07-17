@@ -6,12 +6,14 @@ from pubg_python import PUBG, Shard
 from imgrender import renderImage
 from tokens import dTOKEN, pTOKEN
 
+print(dTOKEN, pTOKEN)
 
-pubg = PUBG(pTOKEN, Shard.PC_RU)
+
+pubg = PUBG(pTOKEN, Shard.STEAM)
 bot = Bot(command_prefix="!", pm_help=False)
 bot.remove_command('help')
 
-player_names = {}
+player_names = []
 analysed_matches = []
 
 
@@ -24,7 +26,7 @@ def findRosterByName(name, rosters):
 
 async def findLoginInPUBG(login):
   try:
-    await bot.wait_until_ready()
+    # await bot.wait_until_ready()
     player = pubg.players().filter(player_names=[login])
     for playerId in player:
       player = pubg.players().get(playerId)
@@ -41,21 +43,25 @@ async def findLoginInPUBG(login):
     return await findLoginInPUBG(login)
 
 
+@bot.event
+async def on_ready():
+  await bot.change_presence(activity=discord.Game(name='pornhub.com'))
+  bot.loop.create_task(trackPlayers())
+
 async def trackPlayers():
   global analysed_matches
   global player_names
   await bot.wait_until_ready()
   while True:
     print('loop')
-    if len(list(player_names.values())) > 0:
-      print(list(player_names.values()))
-      players = pubg.players().filter(player_names=list(player_names.values()))
+    if len(player_names) > 0:
+      print(player_names)
+      players = pubg.players().filter(player_names=player_names)
       for playerId in players:
+        await asyncio.sleep(10)
         player = pubg.players().get(playerId)
-        await asyncio.sleep(60)
         matchId = player.matches[0].id
         if(matchId in analysed_matches):
-          await asyncio.sleep(60)
           continue
         else:
           m = pubg.matches().get(matchId)
@@ -63,53 +69,47 @@ async def trackPlayers():
           analysed_matches.append(matchId)
           if(r.stats['rank'] <= 3):
             renderImage(m.map_name, m.game_mode, r.stats['rank'], r.participants, len(m.rosters))
-            await bot.send_file(discord.Object(id='370294822436864002'), 'x.png')
+            channel = bot.get_channel(370294822436864002)
+            await channel.send(file=discord.File('x.png'))
     await asyncio.sleep(60)
 
 
-@bot.event
-async def on_ready():
-  print(bot.user.name)
-  await bot.change_presence(game=discord.Game(name='Херов ПАБГ'))
-  bot.loop.create_task(trackPlayers())
-
-
-@bot.command(pass_context=True)
+@bot.command()
 async def track(ctx, login):
   global player_names
   authorId = ctx.message.author.id
   authorMention = ctx.message.author.mention
-  if(authorId not in player_names):
+  if(login not in player_names):
     result = await findLoginInPUBG(login)
     if(result is True):
-      player_names[authorId] = login
-      await bot.say("{} Аккаунт {} отслеживается.".format(authorMention, login))
+      player_names.append(login)
+      await ctx.send("{} Профиль {} отслеживается.".format(authorMention, login))
     else:
-      await bot.say("{} Аккаунт {} не найден.".format(authorMention, login))
+      await ctx.send("{} Профиль {} не найден.".format(authorMention, login))
   else:
-    await bot.say("{} Вы уже отслеживаете Аккаунт {}.".format(authorMention, player_names[authorId]))
+    await ctx.send("{} Профиль {} уже отслеживается.".format(authorMention, login))
 
 
-@bot.command(pass_context=True)
-async def untrack(ctx):
+@bot.command()
+async def untrack(ctx, login):
   global player_names
   authorId = ctx.message.author.id
   authorMention = ctx.message.author.mention
   print(ctx.message__dict__)
-  if(authorId in player_names):
-    await bot.say("{} Прекращаю отслеживать Аккаунт {}".format(authorMention, player_names[authorId]))
-    del player_names[authorId]
+  if(login in player_names):
+    await ctx.send("{} Прекращаю отслеживать Аккаунт {}".format(authorMention, login))
+    del player_names[player_names.index(login)]
   else:
-    await bot.say("{} Было бы что отслеживать...".format(authorMention))
+    await ctx.send("{} Было бы что отслеживать...".format(authorMention))
 
 
-# @bot.command(pass_context=True)
+# @bot.command()
 # async def debug(ctx, variable):
 #   print(eval(variable))
-#   await bot.say(str(eval(variable)))
+#   await bot.send(str(eval(variable)))
 
 
-@bot.command(pass_context=True)
+@bot.command()
 async def help(ctx):
   helpmsg = '''
   ```css
@@ -119,6 +119,6 @@ async def help(ctx):
 
   !debug %variable%: (debug global variables)```
   '''
-  await bot.say(helpmsg)
+  await ctx.send(helpmsg)
 
 bot.run(dTOKEN)
