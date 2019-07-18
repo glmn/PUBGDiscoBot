@@ -1,1 +1,1 @@
-py gbot.py
+python gbot.py
