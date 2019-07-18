@@ -1,1 +1,1 @@
-python gbot.py
+release: python gbot.py
