@@ -70,7 +70,7 @@ async def trackPlayers():
           if(r.stats['rank'] <= 3):
             renderImage(m.map_name, m.game_mode, r.stats['rank'], r.participants, len(m.rosters))
             channel = bot.get_channel(370294822436864002)
-            await channel.send(file=discord.File('x.png'))
+            await channel.send(content="Match: {}".format(m.id), file=discord.File('x.png'))
     await asyncio.sleep(60)
 
 
@@ -95,7 +95,7 @@ async def untrack(ctx, login):
   authorMention = ctx.message.author.mention
   print(ctx.message__dict__)
   if(login in player_names):
-    await ctx.send("{} Прекращаю отслеживать Аккаунт {}".format(authorMention, login))
+    await ctx.send("Прекращаю отслеживать Аккаунт {}".format(authorMention))
     del player_names[player_names.index(login)]
   else:
     await ctx.send("{} Было бы что отслеживать...".format(authorMention))
