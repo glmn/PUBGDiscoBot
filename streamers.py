@@ -1,0 +1,23 @@
+streamers = {
+    'account.20d6e553648e433990934d67b5d2b8da': ['https://www.twitch.tv/0nuqtive','0nuqtive'],
+    'account.68b8225a0d754443941b41ee96eedb5d':	['https://www.twitch.tv/aelris_','aelris'],
+    'account.6500dd9050eb4526bd81308da77be51f':	['https://www.twitch.tv/kastielpr0','KastielPro'],
+    'account.700f6523fe9947cdbff9d64c6fbb8f57':	['https://www.twitch.tv/kimadevin','Chik_0'],
+    'account.f7825915f35446f290d4864ecb34b77f':	['https://www.twitch.tv/kan0ha','kanoige'],
+    'account.05c80c6d55d44064959679f550a93eae': ['https://www.twitch.tv/nyarmo','EBALO_NA_0_'],
+    'account.05c80c6d55d44064959679f550a93eae':	['https://www.twitch.tv/julia_saley','Julia_Saley'],
+    'account.ac1d9cb0b67d426ca25999b9f0d947ec':	['https://www.twitch.tv/l3om4nc3r','L3om4nc3R'],
+    'account.8b36216a173340a7b5cd260f7e47a8a9':	['https://www.twitch.tv/vikingtv95','VIKINGTV95_TWICH'],
+    'account.7db03cbb64d94da7bcf9aae4f6611e48':	['https://www.twitch.tv/kolxoznik103','kolxoznik103'],
+    'account.15cbf322a9bc45e88b0cd9f12ef4188e':	['https://www.twitch.tv/chocotaco','chocoTaco'],
+    'account.a81122c0546448d6805bc5a23d423102':	['https://www.twitch.tv/aktep','AkTeppp'],
+    'account.50dcacc3465445c29d6ad742f94864d6':	['https://www.twitch.tv/makatao','makataO'],
+    'account.e97b6b13078145f0a5b4547a3d64b738':	['https://www.twitch.tv/recrent','Recrent'],
+    'account.3ed0d0a6555845ce82714071880bbac3':	['https://www.twitch.tv/i1ame_ru','iLame_ru'],
+    'account.0bb20cf153864cb788fef58b2e873b6f':	['https://www.twitch.tv/drainys','Drainys'],
+    'account.22615fc8e7c24f35967aaa9fd7597137':	['https://www.twitch.tv/ubah','axaxaxaxaxaxaa'],
+    'account.4841baf58fc548f3ab49d866655ccb34':	['https://www.twitch.tv/aisumaisu','YikesYoink'],
+    'account.4096672a6a6b42709cdc79c78c0d3a27':	['https://www.twitch.tv/mumino','MuMiNo'],
+    'account.87bc8a5078e44a9e8c8824daa8033182':	['https://www.twitch.tv/pokamolodoy','POKAMOLODOY'],
+    'account.02d40a79143849d8817c806d50298453': ['https://www.twitch.tv/smorodinova','Smorodinova']
+}
