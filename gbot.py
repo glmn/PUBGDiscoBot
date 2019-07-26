@@ -26,7 +26,6 @@ def findRosterByName(name, rosters):
 
 async def findLoginInPUBG(login):
   try:
-    # await bot.wait_until_ready()
     player = pubg.players().filter(player_names=[login])
     for playerId in player:
       player = pubg.players().get(playerId)
