@@ -10,7 +10,9 @@
 
 * Change channel id in gbot.py to yours
 
-```channelId = CHANNEL ID HERE```
+```python
+channelId = CHANNEL ID HERE
+```
 
 * Create `tokens.py` in root folder and fill it with discord and PUBG tokens
 ```python
