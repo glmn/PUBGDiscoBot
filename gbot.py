@@ -108,7 +108,7 @@ async def help(ctx):
   helpmsg = '''
   ```css
   P#BG - Трекинг последних матчей и отображение статистики\n
-  !track %login%: Добавить отслеживание Аккаунта %nick%
+  !track %login%: Добавить отслеживание
   !untrack %login%: Отменить отслеживание
 
   !debug %variable%: (debug global variables)```
