@@ -26,4 +26,7 @@ python gbot.py
 ```
 
 * Invite bot to your server via discord developer portal
+
 * Type !help to see help message :+1:
+
+![Example#2](https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/img/examples/2.png)
