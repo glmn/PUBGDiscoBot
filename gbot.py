@@ -90,12 +90,11 @@ async def track(ctx, login):
 async def untrack(ctx, login):
   global player_names
   authorMention = ctx.message.author.mention
-  print(ctx.message__dict__)
   if(login in player_names):
-    await ctx.send("Прекращаю отслеживать Аккаунт {}".format(authorMention))
     del player_names[player_names.index(login)]
+    await ctx.send("{} Прекращаю отслеживать Аккаунт {}".format(authorMention, login))
   else:
-    await ctx.send("{} Было бы что отслеживать...".format(authorMention))
+    await ctx.send("{} Было бы что отслеживать... {} не найден".format(authorMention, login))
 
 
 # @bot.command()
@@ -108,9 +107,9 @@ async def untrack(ctx, login):
 async def help(ctx):
   helpmsg = '''
   ```css
-  P#BG -Трекинг последних матчей и отображение статистики\n
-  !track %nick%: Добавить отслеживание Аккаунта %nick%
-  !untrack: Отменить отслеживание
+  P#BG - Трекинг последних матчей и отображение статистики\n
+  !track %login%: Добавить отслеживание Аккаунта %nick%
+  !untrack %login%: Отменить отслеживание
 
   !debug %variable%: (debug global variables)```
   '''
