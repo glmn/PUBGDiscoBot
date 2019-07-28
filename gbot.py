@@ -6,7 +6,7 @@ from pubg_python import PUBG, Shard
 from imgrender import renderImage
 from tokens import dTOKEN, pTOKEN
 
-channelId = 370294822436864002
+channelId = 604824085469462538
 pubg = PUBG(pTOKEN, Shard.STEAM)
 bot = Bot(command_prefix="!", pm_help=False)
 bot.remove_command('help')
