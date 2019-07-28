@@ -1,78 +1,65 @@
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 def renderImage(mapName, mode, position, teammates, rostersCount):
+  
   if(mapName == 'Desert_Main'):
     mapName = 'Miramar_Main'
 
   image = Image.open('img/{}.png'.format(mapName))
+  userIcon = Image.open('img/user.png', mode='r')
+  draw = ImageDraw.Draw(image)
+
   mapName = mapName[:-5]
   if(mapName == 'Savage'):
     mapName = 'Sanhok'
 
-  teammatesCount = len(teammates)
-  if((mode == 'squad' or mode == 'squad-fpp') and teammatesCount != 4):
-    if(teammatesCount == 1):
-      mode = '1-man ' + mode
-    elif(teammatesCount == 2):
-      mode = '2-man ' + mode
-    else:
-      mode = '3-man ' + mode
-
-  img_draw = ImageDraw.Draw(image)
-
+  #Count user icons
+  iconsCount = 4 if 'squad' in mode else len(teammates)
+   
   #Fonts
-  font = ImageFont.truetype("fonts/overpass.ttf", 24)
-  title = ImageFont.truetype("fonts/overpass.ttf", 50)
-  rank = ImageFont.truetype("fonts/agency.ttf", 60)
-  statsFont = ImageFont.truetype("fonts/agency.ttf", 30)
+  fontRegular = ImageFont.truetype("fonts/MyriadPro-Regular.ttf", 22)
+  fontBold = ImageFont.truetype("fonts/MyriadPro-Bold.ttf", 22)
+  fontPosition = ImageFont.truetype("fonts/MyriadPro-Bold.ttf", 15)
 
-  padding = 10
-  margin = 70
+  #Sizes
+  padding = 24
+  margin = 40
+  userIconPadding = 89
 
-  #colors
+  #Colors
   white = (252, 255, 255, 255)
-  yellow = (247, 197, 1, 255)
-  grey = (84, 93, 102, 255)
+  grey = (208, 225, 229, 255)
 
-  #MAP + GAME MODE
-  img_draw.text((10, 10), '{} [{}]'.format(mapName.upper(), mode.upper()), fill=white, font=font)
+  #Position
+  winText = 'TOP-' + str(position)
+  draw.text((540, 12), winText, fill=white, font=fontPosition)
 
-  if(position == 1):
-    winText = 'WINNER WINNER CHICKEN DINNER!'
-  elif(position <= 10):
-    winText = 'YOU MADE IT TO TOP 10!'
-  else:
-    winText = 'BETTER LUCK NEXT TIME!'
+  #Mode icons 
+  for i in range(iconsCount):
+    image.paste(userIcon, (userIconPadding , 10), userIcon)
+    userIconPadding += 15
 
-  img_draw.text((10, 35), winText, fill=yellow, font=font)
-
-  #RANK
-  position = '#' + str(position)
-  positionWidth = rank.getsize(position)[0]
-  img_draw.text((540 - positionWidth, 0), position, fill=yellow, font=rank)
-  img_draw.text((540, 0), '/', fill=grey, font=rank)
-
-  #TOTAL TEAMS
-  img_draw.text((560, 0), str(rostersCount), fill=grey, font=rank, spacing=12)
+  #Sort mates by kills count
+  teammates.sort(key=lambda x:x.kills, reverse=True)
 
   for mate in teammates:
     name = mate.name.upper()
-    nameWidth = padding + statsFont.getsize(name)[0]
-    killWidth = padding + nameWidth + statsFont.getsize('KILL')[0] + 15
-    killsNumberWidth = padding + killWidth + statsFont.getsize(str(mate.kills))[0] + 10
-    dmgWidth = padding + killsNumberWidth + statsFont.getsize('DMG')[0]
+    nameWidth = padding + fontBold.getsize(name)[0]
+    killWidth = padding + nameWidth + fontBold.getsize('KILL')[0] - 3
+    killsNumberWidth = padding + killWidth + fontBold.getsize(str(mate.kills))[0] - 25
+    dmgWidth = padding + killsNumberWidth + fontBold.getsize('DMG')[0] - 5
 
-    img_draw.text((10, margin), name, fill=white, font=statsFont)
-    img_draw.text((nameWidth + 20, margin), 'KILL', fill=grey, font=statsFont)
-    img_draw.text((killWidth, margin), str(mate.kills), fill=white, font=statsFont)
-    img_draw.text((killsNumberWidth, margin), 'DMG', fill=grey, font=statsFont)
-    img_draw.text((dmgWidth, margin), str(round(mate.damage_dealt)), fill=white, font=statsFont)
+    draw.ellipse((10, margin + 5, 18, margin + 5 + 8), fill=(253, 204, 9, 255))
+    draw.text((24, margin), name, fill=white, font=fontBold)
+    draw.text((nameWidth + 18, margin), 'KILL', fill=grey, font=fontRegular)
+    draw.text((killWidth, margin), str(mate.kills), fill=white, font=fontBold)
+    draw.text((killsNumberWidth + 18, margin), 'DMG', fill=grey, font=fontRegular)
+    draw.text((dmgWidth, margin), str(round(mate.damage_dealt)), fill=white, font=fontBold)
 
-    margin += 30
+    margin += 20
 
   area = (0, 0, 615, margin + padding)
   image = image.crop(area)
-  image = ImageOps.expand(image, border=2, fill=(110, 96, 31, 255))
 
   image.save('x.png')
   return True

@@ -6,7 +6,7 @@ from pubg_python import PUBG, Shard
 from imgrender import renderImage
 from tokens import dTOKEN, pTOKEN
 
-channelId = 370294822436864002
+channelId = 604824085469462538
 pubg = PUBG(pTOKEN, Shard.STEAM)
 bot = Bot(command_prefix="!", pm_help=False)
 bot.remove_command('help')
@@ -64,7 +64,7 @@ async def trackPlayers():
           m = pubg.matches().get(matchId)
           r = findRosterByName(player.name, m.rosters)
           analysed_matches.append(matchId)
-          if(r.stats['rank'] <= 3):
+          if(r.stats['rank'] <= 100):
             renderImage(m.map_name, m.game_mode, r.stats['rank'], r.participants, len(m.rosters))
             channel = bot.get_channel(channelId)
             await channel.send(content="Match: {}".format(m.id), file=discord.File('x.png'))
