@@ -6,21 +6,16 @@ def renderImage(mapName, mode, position, teammates, rostersCount):
     mapName = 'Miramar_Main'
 
   image = Image.open('img/{}.png'.format(mapName))
-  draw = ImageDraw.Draw(image)
   userIcon = Image.open('img/user.png', mode='r')
+  draw = ImageDraw.Draw(image)
 
   mapName = mapName[:-5]
   if(mapName == 'Savage'):
     mapName = 'Sanhok'
 
-  #Mode
-  if(mode == 'squad' or mode == 'squad-fpp'):
-    iconsCount = 4
-  else:
-    iconsCount = len(teammates)
-
-  
-
+  #Count user icons
+  iconsCount = 4 if 'squad' in mode else len(teammates)
+   
   #Fonts
   fontRegular = ImageFont.truetype("fonts/MyriadPro-Regular.ttf", 22)
   fontBold = ImageFont.truetype("fonts/MyriadPro-Bold.ttf", 22)
