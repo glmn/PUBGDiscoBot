@@ -62,12 +62,13 @@ async def trackPlayers():
           continue
         else:
           m = pubg.matches().get(matchId)
-          r = findRosterByName(player.name, m.rosters)
-          analysed_matches.append(matchId)
-          if(r.stats['rank'] <= 100):
-            renderImage(m.map_name, m.game_mode, r.stats['rank'], r.participants, len(m.rosters))
-            channel = bot.get_channel(channelId)
-            await channel.send(content="Match: {}".format(m.id), file=discord.File('x.png'))
+          if(m.map_name != 'Range_Main'):
+            r = findRosterByName(player.name, m.rosters)
+            analysed_matches.append(matchId)
+            if(r.stats['rank'] <= 100):
+              renderImage(m.map_name, m.game_mode, r.stats['rank'], r.participants, len(m.rosters))
+              channel = bot.get_channel(channelId)
+              await channel.send(content="Match: {}".format(m.id), file=discord.File('x.png'))
     await asyncio.sleep(60)
 
 
