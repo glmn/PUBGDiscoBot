@@ -5,7 +5,6 @@ streamers = {
     'account.700f6523fe9947cdbff9d64c6fbb8f57':	['https://www.twitch.tv/kimadevin','Chik_0'],
     'account.f7825915f35446f290d4864ecb34b77f':	['https://www.twitch.tv/kan0ha','kanoige'],
     'account.05c80c6d55d44064959679f550a93eae': ['https://www.twitch.tv/nyarmo','EBALO_NA_0_'],
-    'account.05c80c6d55d44064959679f550a93eae':	['https://www.twitch.tv/julia_saley','Julia_Saley'],
     'account.ac1d9cb0b67d426ca25999b9f0d947ec':	['https://www.twitch.tv/l3om4nc3r','L3om4nc3R'],
     'account.8b36216a173340a7b5cd260f7e47a8a9':	['https://www.twitch.tv/vikingtv95','VIKINGTV95_TWICH'],
     'account.7db03cbb64d94da7bcf9aae4f6611e48':	['https://www.twitch.tv/kolxoznik103','kolxoznik103'],
