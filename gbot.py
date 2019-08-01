@@ -43,7 +43,12 @@ async def findLoginInPUBG(login):
 @bot.event
 async def on_ready():
   await bot.change_presence(activity=discord.Game(name='pornhub.com'))
-  bot.loop.create_task(trackPlayers())
+  try:
+    bot.loop.create_task(trackPlayers())
+  except:
+    print('Task error')
+    bot.loop.create_task(trackPlayers())
+    pass
 
 async def trackPlayers():
   global analysed_matches
@@ -57,7 +62,13 @@ async def trackPlayers():
       for playerId in players:
         await asyncio.sleep(10)
         player = pubg.players().get(playerId)
-        matchId = player.matches[0].id
+        try:
+          matchId = player.matches[0].id
+        
+        except :
+          print('Player {} has no matches'.format(player.name))
+          continue
+        
         if(matchId in analysed_matches):
           continue
         else:
