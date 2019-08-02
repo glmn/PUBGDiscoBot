@@ -1,0 +1,5 @@
+pubg_python==0.6.0
+tinydb==3.13.0
+discord.py==1.2.3
+Pillow==6.1.0
+discord==1.0.1
