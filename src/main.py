@@ -6,8 +6,14 @@ from pubg_python import PUBG, Shard
 from imgrender import renderImage
 from tinydb import TinyDB, Query
 from config import config
+from ratelimiter import RateLimiter
 
 db = TinyDB(config['database']['path'])
+playersTable = db.table('players')
+guildsTable = db.table('guilds')
+rateLimiter = RateLimiter(7.0, 60.0)
+
+
 pubg = PUBG(config['tokens']['pubg'], Shard.STEAM)
 bot = Bot(command_prefix="!", pm_help=False)
 bot.remove_command('help')
@@ -19,22 +25,26 @@ async def on_ready():
   await bot.change_presence(activity=activity)
 
 
+
 @bot.command(pass_context=True)
 async def track(ctx, playerName=None):
   author = ctx.message.author
+  channel = ctx.message.channel
 
   if playerName is None: 
     return False
   
-  if await PlayerExistsOrInsert(playerName) is False:
-    return False
+  if PlayerExists(playerName) is False:
+    if await PlayerInsert(playerName) is False:
+      return False #Player Not Found Error
   
-  return isAuthorTrackPlayer(author, playerName)
+  return isAuthorTrackPlayer(author, channel, playerName)
 
 
   
 async def PubgPlayerIdByName(playerName):
   try:
+    await rateLimiter.wait()
     player = pubg.players().filter(player_names=[playerName])[0]
     return player.id
 
@@ -47,28 +57,30 @@ async def PubgPlayerIdByName(playerName):
 
   except pubg_python.exceptions.RateLimitError:
     print('RateLimitError')
-    await asyncio.sleep(1)
+    await rateLimiter.wait()
     return await PubgPlayerIdByName(playerName)
 
-async def PlayerExistsOrInsert(playerName):
+def PlayerExists(playerName):
   Data = Query()
-  playersTable = db.table('players')
 
   try:
     result = playersTable.search(Data.name == playerName)[0]
   except IndexError:
     result = []
 
-  if len(result) == 0:
-    playerId = await PubgPlayerIdByName(playerName)
-    if playerId == -1:
-      return False
-    else:
-      playersTable.insert({'id': playerId, 'name': playerName})
+  return len(result) > 0 
+
+
+async def PlayerInsert(playerName):
+  playerId = await PubgPlayerIdByName(playerName)
+  if playerId == -1:
+    return False
+  else:
+    playersTable.insert({'id': playerId, 'name': playerName})
   
   return True
 
-def isAuthorTrackPlayer(author, playerName):
+def isAuthorTrackPlayer(author, channel, playerName):
   Data = Query()
   try:
     result = db.search(Data.author == str(author))[0]
@@ -82,7 +94,7 @@ def isAuthorTrackPlayer(author, playerName):
       result['players'].append(playerName)
       db.write_back([result])
   else:
-    db.insert({'author': str(author), 'guild': str(author.guild), 'players': [playerName]})
+    db.insert({'author': str(author), 'guild': author.guild.id, 'channelId': channel.id, 'players': [playerName]})
   
   return True
 

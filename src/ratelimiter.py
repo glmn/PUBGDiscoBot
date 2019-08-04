@@ -1,7 +1,7 @@
 import time
 import asyncio
 
-class RateLimitter:
+class RateLimiter:
 
   def __init__(self, rate, per):
     self.rate = rate
