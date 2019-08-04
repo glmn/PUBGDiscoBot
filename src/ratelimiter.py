@@ -20,9 +20,9 @@ class RateLimiter:
     if self.allowance < 1.0:
       print('wait')
       timeToSleep = (1 - self.allowance) * (self.per / self.rate)
-      await asyncio.sleep(timeToSleep)
-      self.lastCheck = time.time()
+      self.lastCheck = time.time() + timeToSleep
       self.allowance = 0.0
+      await asyncio.sleep(timeToSleep)
     else:
       self.allowance -= 1.0
     
