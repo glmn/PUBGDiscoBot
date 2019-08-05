@@ -1,48 +1,83 @@
+import os
+import pprint
 import time
 import discord
 import asyncio
 import pubg_python.exceptions
+from var_dump import var_dump
 from discord.ext.commands import Bot
 from pubg_python import PUBG, Shard
 from imgrender import renderImage
-from tinydb import TinyDB, Query, where
 from config import config
 from ratelimiter import RateLimiter
+from database import DBManager
 
-db = TinyDB(config['database']['path'])
-playersTable = db.table('players')
-guildsTable = db.table('guilds')
-rateLimiter = RateLimiter(7.0, 60.0)
 
+db = DBManager()
+rateLimiter = RateLimiter(10.0, 60.0)
 
 pubg = PUBG(config['tokens']['pubg'], Shard.STEAM)
 bot = Bot(command_prefix="!", pm_help=False)
 bot.remove_command('help')
 
-async def Tracker():
+async def Looper():
   while True:
+    print('loop')
     await bot.wait_until_ready()
-    playerIds = getPlayerIds()
-    print(playerIds)
+    playerIds = db.GetPlayerIds()
+    await PubgGetPlayersData(playerIds)
     
-    return False
-    await asyncio.sleep(1)
+    await asyncio.sleep(100)
 
-def getPlayerIds(chunkSize=10):
-  playerIds = []
-  players = playersTable.search(where('name').exists())
-  chunks = [players[i *chunkSize:(i + 1) *chunkSize] for i in range((len(players) +chunkSize - 1) //chunkSize )]
-  for chunk in chunks:
-    playerIds.append(list(map(lambda x: x['id'], chunk)))
-  
-  return playerIds
-        
+
+async def PubgGetPlayersData(playerIds):
+  counter = 0
+  playersToGet = []
+
+  for playerId in playerIds:
+    playersToGet.append(playerId)
+    counter += 1
+
+    if counter % 10 == 0 or playerIds.index(playerId) == len(playerIds):
+      try: 
+        await rateLimiter.wait()
+        result = pubg.players().filter(player_ids=playersToGet)
+      except Exception as e:
+        print(str(e))
+      
+      playersToGet = []
+
+      for player in result:
+        try:
+          db.UpdatePlayerLastCheck(playerId)
+          await rateLimiter.wait()
+          match = pubg.matches().get(player.matches[0])
+          if not db.IsInAnalyzedMatches(playerId, match.id):
+            db.InsertAnalyzedMatch(playerId, match.id)
+            roster = findRosterByName(player.name, match.rosters)
+            rank = roster.stats['rank']
+            if(rank <= 100):
+              authors = db.FindAuthorsByPlayerId(playerId)
+              image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
+              mention = '@{},'.format(*[x['name'] for x in authors])
+              channel = bot.get_channel(authors[0]['channelId'])
+              content = '{} Match: {}'.format(mention, match.id)
+              await channel.send(content=content, file=discord.File(image))
+              os.remove(image)
+        except Exception as e:
+          print(e)
+
+def findRosterByName(name, rosters):
+  for roster in rosters:
+    for participant in roster.participants:
+      if participant.name == name:
+        return roster
 
 @bot.event
 async def on_ready():
   activity = discord.Game(name=config['discord']['activity']['name'])
   await bot.change_presence(activity=activity)
-  bot.loop.create_task(Tracker())
+  bot.loop.create_task(Looper())
 
 
 @bot.command(pass_context=True)
@@ -53,15 +88,15 @@ async def track(ctx, playerName=None):
   if playerName is None: 
     return False
   
-  if PlayerExists(playerName) is False:
+  if db.PlayerExists(playerName) is False:
     playerId = playerId = await PubgPlayerIdByName(playerName)
     if playerId == -1:
       return False
     else:
-      if PlayerInsert(playerName, playerId) is False:
+      if db.PlayerInsert(playerName, playerId) is False:
         return False #Player Not Found Error
   
-  return isAuthorTrackPlayer(author, channel, playerId)
+  return db.IsAuthorTrackPlayer(author, channel, playerId)
 
 
 async def PubgPlayerIdByName(playerName):
@@ -81,41 +116,6 @@ async def PubgPlayerIdByName(playerName):
     print('RateLimitError')
     await rateLimiter.wait()
     return await PubgPlayerIdByName(playerName)
-
-
-def PlayerExists(playerName):
-  Data = Query()
-
-  try:
-    result = playersTable.search(Data.name == playerName)[0]
-  except IndexError:
-    result = []
-
-  return len(result) > 0 
-
-
-def PlayerInsert(playerName, playerId):
-  return playersTable.insert({'id': playerId, 'name': playerName, 'lastMatchId': '', 'lastCheck': time.time()})
-
-
-def isAuthorTrackPlayer(author, channel, playerId):
-  Data = Query()
-  try:
-    result = db.search(Data.author == str(author))[0]
-  except IndexError:
-    result = []
-  
-  if len(result) > 0:
-    if playerId in result['players']:
-      return True
-    else:
-      result['players'].append(playerId)
-      db.write_back([result])
-  else:
-    db.insert({'author': str(author), 'guild': author.guild.id, 'channelId': channel.id, 'players': [playerId]})
-  
-  return True
-
 
 try:
   bot.run(config['tokens']['discord'])

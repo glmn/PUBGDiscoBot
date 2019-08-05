@@ -1,3 +1,4 @@
+import time
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 def renderImage(mapName, mode, position, teammates, rostersCount):
@@ -61,5 +62,6 @@ def renderImage(mapName, mode, position, teammates, rostersCount):
   area = (0, 0, 615, margin + padding)
   image = image.crop(area)
 
-  image.save('x.png')
-  return True
+  imageName = '{}-{}-{}.png'.format(time.time(), mapName, position)
+  image.save(imageName)
+  return imageName
