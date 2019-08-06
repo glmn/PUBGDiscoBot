@@ -10,40 +10,40 @@ class DBManager:
     self.playersTable = self.db.table('players')
     self.guildsTable = self.db.table('guilds')
 
-  def IsInAnalyzedMatches(self, playerId, matchId):
+  def isInAnalyzedMatches(self, playerId, matchId):
     player = self.playersTable.search((Query().analyzedMatches.any(matchId)) & (Query().id == playerId))
     return len(player) > 0
 
-  def InsertAnalyzedMatch(self, playerId, matchId):
+  def assignAnalyzedMatch(self, playerId, matchId):
     result = self.playersTable.search(Query().id == playerId)[0]
     result['analyzedMatches'].append(matchId)
     return self.playersTable.write_back([result])
 
-  def PreparePlayerIds(self, chunkSize=10):
-    players = self.playersTable.search(where('lastCheck') <= time.time() - config['time_between_check'])
+  def preparePlayerIds(self, chunkSize=10):
+    timeToCompare = time.time() - config['time_between_check']
+    players = self.playersTable.search(where('lastCheck') <= timeToCompare)
     playerIds = list(map(lambda x: x['id'], players))
     return playerIds
                 
-  def UpdatePlayerLastCheck(self, playerId):
+  def updatePlayerLastCheck(self, playerId):
     result = self.playersTable.update({'lastCheck': time.time()}, Query().id == playerId)
     return result
 
-  def FindAuthorsByPlayerId(self, playerId):
+  def findAuthorsByPlayerId(self, playerId):
     result = self.authorsTable.search(Query().players.any(playerId))
-    print(result)
     return result
 
-  def PlayerExists(self, playerName):
+  def playerExists(self, playerName):
     try:
       result = self.playersTable.search(Query().name == playerName)[0]
     except IndexError:
       result = []
     return len(result) > 0 
 
-  def PlayerInsert(self, playerName, playerId):
+  def playerInsert(self, playerName, playerId):
     return self.playersTable.insert({'id': playerId, 'name': playerName, 'lastMatchId': '', 'analyzedMatches': [], 'lastCheck': 0})
 
-  def IsAuthorTrackPlayer(self, author, channel, playerId):
+  def isAuthorTrackPlayer(self, author, channel, playerId):
     try:
       result = self.authorsTable.search(Query().id == author.id)[0]
     except IndexError:

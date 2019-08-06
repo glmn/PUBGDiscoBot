@@ -26,7 +26,7 @@ async def Looper():
   while True:
     print('loop')
     await bot.wait_until_ready()
-    playerIds = db.PreparePlayerIds()
+    playerIds = db.preparePlayerIds()
     await PubgGetPlayersData(playerIds)
     
     await asyncio.sleep(100)
@@ -34,22 +34,22 @@ async def Looper():
 
 async def PubgGetPlayersData(playerIds):
   playersChunks = list(chunk(playerIds, 10))
-  for playerChunk in playersChunks:
+  for playersChunk in playersChunks:
     try: 
       await rateLimiter.wait()
-      result = pubg.players().filter(player_ids=playerChunk)
+      result = pubg.players().filter(player_ids=playersChunk)
       for player in result:
-          db.UpdatePlayerLastCheck(player.id)
-          await rateLimiter.wait()
-          match = pubg.matches().get(player.matches[0])
-          if not db.IsInAnalyzedMatches(player.id, match.id):
-            db.InsertAnalyzedMatch(player.id, match.id)
-            roster = findRosterByName(player.name, match.rosters)
-            rank = roster.stats['rank']
-            if(rank <= 100):
-              authors = db.FindAuthorsByPlayerId(player.id)
+          db.updatePlayerLastCheck(player.id)
+          roster = findRosterByName(player.name, match.rosters)
+          rank = roster.stats['rank']
+          if(rank <= 3):
+            await rateLimiter.wait()
+            match = pubg.matches().get(player.matches[0])
+            if not db.isInAnalyzedMatches(player.id, match.id):
+              db.assignAnalyzedMatch(player.id, match.id)
+              authors = db.findAuthorsByPlayerId(player.id)
               image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
-              mention = '@<{}>,'.format(*[x['id'] for x in authors])
+              mention = '@{},'.format(*[x['id'] for x in authors])
               channel = bot.get_channel(authors[0]['channelId'])
               content = '{} Match: {}'.format(mention, match.id)
               await channel.send(content=content, file=discord.File(image))
@@ -82,15 +82,15 @@ async def track(ctx, playerName=None):
   if playerName is None: 
     return False
   
-  if db.PlayerExists(playerName) is False:
+  if db.playerExists(playerName) is False:
     playerId = await PubgPlayerIdByName(playerName)
     if playerId == -1:
       return False
     else:
-      if db.PlayerInsert(playerName, playerId) is False:
+      if db.playerInsert(playerName, playerId) is False:
         return False #Player Not Found Error
   
-  return db.IsAuthorTrackPlayer(author, channel, playerId)
+  return db.isAuthorTrackPlayer(author, channel, playerId)
 
 
 async def PubgPlayerIdByName(playerName):
