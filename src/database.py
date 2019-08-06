@@ -19,8 +19,8 @@ class DBManager:
     result['analyzedMatches'].append(matchId)
     return self.playersTable.write_back([result])
 
-  def GetPlayerIds(self, chunkSize=10):
-    players = self.playersTable.search(where('name').exists())
+  def PreparePlayerIds(self, chunkSize=10):
+    players = self.playersTable.search(where('lastCheck') <= time.time() - config['time_between_check'])
     playerIds = list(map(lambda x: x['id'], players))
     return playerIds
                 

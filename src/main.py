@@ -13,6 +13,8 @@ from ratelimiter import RateLimiter
 from database import DBManager
 
 
+TIME_BETWEEN_CHECK = 600.0
+
 db = DBManager()
 rateLimiter = RateLimiter(10.0, 60.0)
 
@@ -24,7 +26,7 @@ async def Looper():
   while True:
     print('loop')
     await bot.wait_until_ready()
-    playerIds = db.GetPlayerIds()
+    playerIds = db.PreparePlayerIds()
     await PubgGetPlayersData(playerIds)
     
     await asyncio.sleep(100)
@@ -47,7 +49,7 @@ async def PubgGetPlayersData(playerIds):
             if(rank <= 100):
               authors = db.FindAuthorsByPlayerId(player.id)
               image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
-              mention = '@<{}>,'.format(*[x['name'] for x in authors])
+              mention = '@<{}>,'.format(*[x['id'] for x in authors])
               channel = bot.get_channel(authors[0]['channelId'])
               content = '{} Match: {}'.format(mention, match.id)
               await channel.send(content=content, file=discord.File(image))
@@ -81,7 +83,7 @@ async def track(ctx, playerName=None):
     return False
   
   if db.PlayerExists(playerName) is False:
-    playerId = playerId = await PubgPlayerIdByName(playerName)
+    playerId = await PubgPlayerIdByName(playerName)
     if playerId == -1:
       return False
     else:
