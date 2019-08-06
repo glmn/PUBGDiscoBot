@@ -31,41 +31,33 @@ async def Looper():
 
 
 async def PubgGetPlayersData(playerIds):
-  counter = 0
-  playersToGet = []
-
-  for playerId in playerIds:
-    playersToGet.append(playerId)
-    counter += 1
-
-    if counter % 10 == 0 or playerIds.index(playerId) == len(playerIds):
-      try: 
-        await rateLimiter.wait()
-        result = pubg.players().filter(player_ids=playersToGet)
-      except Exception as e:
-        print(str(e))
-      
-      playersToGet = []
-
+  playersChunks = list(chunk(playerIds, 10))
+  for playerChunk in playersChunks:
+    try: 
+      await rateLimiter.wait()
+      result = pubg.players().filter(player_ids=playerChunk)
       for player in result:
-        try:
-          db.UpdatePlayerLastCheck(playerId)
+          db.UpdatePlayerLastCheck(player.id)
           await rateLimiter.wait()
           match = pubg.matches().get(player.matches[0])
-          if not db.IsInAnalyzedMatches(playerId, match.id):
-            db.InsertAnalyzedMatch(playerId, match.id)
+          if not db.IsInAnalyzedMatches(player.id, match.id):
+            db.InsertAnalyzedMatch(player.id, match.id)
             roster = findRosterByName(player.name, match.rosters)
             rank = roster.stats['rank']
             if(rank <= 100):
-              authors = db.FindAuthorsByPlayerId(playerId)
+              authors = db.FindAuthorsByPlayerId(player.id)
               image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
-              mention = '@{},'.format(*[x['name'] for x in authors])
+              mention = '@<{}>,'.format(*[x['name'] for x in authors])
               channel = bot.get_channel(authors[0]['channelId'])
               content = '{} Match: {}'.format(mention, match.id)
               await channel.send(content=content, file=discord.File(image))
               os.remove(image)
-        except Exception as e:
-          print(e)
+    except Exception as e:
+      print(e)
+
+def chunk(l, n):
+  for i in range(0, len(l), n):
+    yield l[i:i + n]
 
 def findRosterByName(name, rosters):
   for roster in rosters:

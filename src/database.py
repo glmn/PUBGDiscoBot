@@ -17,7 +17,7 @@ class DBManager:
   def InsertAnalyzedMatch(self, playerId, matchId):
     result = self.playersTable.search(Query().id == playerId)[0]
     result['analyzedMatches'].append(matchId)
-    return self.playersTable.write_back(result)
+    return self.playersTable.write_back([result])
 
   def GetPlayerIds(self, chunkSize=10):
     players = self.playersTable.search(where('name').exists())
