@@ -20,13 +20,13 @@ class DBManager:
     return self.playersTable.write_back([result])
 
   def preparePlayerIds(self, chunkSize=10):
-    timeToCompare = time.time() - config['time_between_check']
+    timeToCompare = time.time() - config['delay']['simple']
     players = self.playersTable.search(where('lastCheck') <= timeToCompare)
     playerIds = list(map(lambda x: x['id'], players))
     return playerIds
                 
-  def updatePlayerLastCheck(self, playerId):
-    result = self.playersTable.update({'lastCheck': time.time()}, Query().id == playerId)
+  def updatePlayerLastCheck(self, playerId, delay=0):
+    result = self.playersTable.update({'lastCheck': time.time() + delay}, Query().id == playerId)
     return result
 
   def findAuthorsByPlayerId(self, playerId):
