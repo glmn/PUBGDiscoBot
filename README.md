@@ -1,4 +1,4 @@
-# PUBGDiscoBot
+![](https://raw.githubusercontent.com/glmn/PUBGDiscoBot/v3-scratch/logo.png)
 ##### Track and push after-match statistics to discord channel
 
 ##### Preview

@@ -45,7 +45,7 @@ async def PubgGetPlayersData(playerIds):
           match = pubg.matches().get(player.matches[0])
           roster = findRosterByName(player.name, match.rosters)
           rank = roster.stats['rank']
-          if rank <= 100:
+          if rank <= 3:
             if not db.isInAnalyzedMatches(player.id, match.id):
               db.assignAnalyzedMatch(player.id, match.id)
               authors = db.findAuthorsByPlayerId(player.id)
