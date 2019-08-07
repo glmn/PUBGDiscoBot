@@ -39,23 +39,26 @@ async def PubgGetPlayersData(playerIds):
       await rateLimiter.wait()
       result = pubg.players().filter(player_ids=playersChunk)
       for player in result:
+        if hasattr(player, 'matches'):
           db.updatePlayerLastCheck(player.id)
+          await rateLimiter.wait()
+          match = pubg.matches().get(player.matches[0])
           roster = findRosterByName(player.name, match.rosters)
           rank = roster.stats['rank']
-          if(rank <= 3):
-            await rateLimiter.wait()
-            match = pubg.matches().get(player.matches[0])
+          if rank <= 100:
             if not db.isInAnalyzedMatches(player.id, match.id):
               db.assignAnalyzedMatch(player.id, match.id)
               authors = db.findAuthorsByPlayerId(player.id)
               image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
-              mention = '@{},'.format(*[x['id'] for x in authors])
+              mention = '<@{}>,'.format(*[x['id'] for x in authors])
               channel = bot.get_channel(authors[0]['channelId'])
               content = '{} Match: {}'.format(mention, match.id)
               await channel.send(content=content, file=discord.File(image))
               os.remove(image)
+        else:
+          db.updatePlayerLastCheck(player.id)
     except Exception as e:
-      print(e)
+      print(player.id, player.name, e)
 
 def chunk(l, n):
   for i in range(0, len(l), n):
