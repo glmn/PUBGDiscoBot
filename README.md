@@ -10,7 +10,7 @@
 
 <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/logo.png" alt="PUBGDiscoBot" align="right">
 
-Bot that notify all your friends in discord channel about your last game where you got at least TOP-3 rank. PUBGDiscoBot calculates amount of kills and damage. It also show same stats for each of your roster. 
+Bot that notify all your friends in discord channel about your last game where you got at least TOP-3 rank. PUBGDiscoBot calculates the amount of kills and damage. It also shows same stats for each of your roster. 
 
 * Discord API based on <a href="https://github.com/Rapptz/discord.py">discord.py</a> library
 * PUBG API implemented with <a href="https://github.com/ramonsaraiva/pubg-python">pubg_python</a> project
