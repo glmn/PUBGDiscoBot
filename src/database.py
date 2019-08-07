@@ -20,7 +20,7 @@ class DBManager:
     return self.playersTable.write_back([result])
 
   def preparePlayerIds(self, chunkSize=10):
-    timeToCompare = time.time() - config['time_between_check']
+    timeToCompare = time.time() - config['delay']['simple']
     players = self.playersTable.search(where('lastCheck') <= timeToCompare)
     playerIds = list(map(lambda x: x['id'], players))
     return playerIds
