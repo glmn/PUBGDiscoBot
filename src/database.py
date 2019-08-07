@@ -25,8 +25,8 @@ class DBManager:
     playerIds = list(map(lambda x: x['id'], players))
     return playerIds
                 
-  def updatePlayerLastCheck(self, playerId):
-    result = self.playersTable.update({'lastCheck': time.time()}, Query().id == playerId)
+  def updatePlayerLastCheck(self, playerId, delay=0):
+    result = self.playersTable.update({'lastCheck': time.time() + delay}, Query().id == playerId)
     return result
 
   def findAuthorsByPlayerId(self, playerId):

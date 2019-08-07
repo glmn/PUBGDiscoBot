@@ -56,7 +56,7 @@ async def PubgGetPlayersData(playerIds):
               await channel.send(content=content, file=discord.File(image))
               os.remove(image)
         else:
-          db.updatePlayerLastCheck(player.id)
+          db.updatePlayerLastCheck(player.id, config['delay']['no_matches'])
     except Exception as e:
       print(player.id, player.name, e)
 
