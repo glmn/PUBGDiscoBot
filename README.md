@@ -6,6 +6,8 @@
     <img src="https://img.shields.io/discord/608550740612349952?label=discord&style=flat">  
 </h4>
 
+<hr>
+
 <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/logo.png" alt="PUBGDiscoBot" align="right">
 
 Bot that notify all your friends in discord channel about your last game where you got at least TOP-3 rank. PUBGDiscoBot calculates amount of kills and damage. It also show same stats for each of your roster. 
