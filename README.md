@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/v3-scratch/logo.png" alt="PUBGDiscoBot">
+  <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/misc/logo.png" alt="PUBGDiscoBot">
   <br>
 </h1>
 
