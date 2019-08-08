@@ -28,26 +28,27 @@ async def Looper():
     print('loop')
     await bot.wait_until_ready()
     playerIds = db.preparePlayerIds()
-    playersData = await pubg.getPlayersData(playerIds)
-    
-    for player in playersData:
-      if hasattr(player, 'matches'):
-        db.updatePlayerLastCheck(player.id)
-        match = await pubg.getMatchById(player.matches[0])
-        roster = pubg.findRosterByName(player.name, match.rosters)
-        rank = roster.stats['rank']
-        if rank <= 3:
-          if not db.isInAnalyzedMatches(player.id, match.id):
-            db.assignAnalyzedMatch(player.id, match.id)
-            authors = db.findAuthorsByPlayerId(player.id)
-            image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
-            mention = '<@{}>,'.format(*[x['id'] for x in authors])
-            channel = bot.get_channel(authors[0]['channelId'])
-            content = '{} Match: {}'.format(mention, match.id)
-            await channel.send(content=content, file=discord.File(image))
-            os.remove(image)
-      else:
-        db.updatePlayerLastCheck(player.id, config['delay']['no_matches'])
+    if(len(playerIds) > 0):
+      playersData = await pubg.getPlayersData(playerIds)
+      
+      for player in playersData:
+        if hasattr(player, 'matches'):
+          db.updatePlayerLastCheck(player.id)
+          match = await pubg.getMatchById(player.matches[0])
+          roster = pubg.findRosterByName(player.name, match.rosters)
+          rank = roster.stats['rank']
+          if rank <= 3:
+            if not db.isInAnalyzedMatches(player.id, match.id):
+              db.assignAnalyzedMatch(player.id, match.id)
+              authors = db.findAuthorsByPlayerId(player.id)
+              image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
+              mention = '<@{}>,'.format(*[x['id'] for x in authors])
+              channel = bot.get_channel(authors[0]['channelId'])
+              content = '{} Match: {}'.format(mention, match.id)
+              await channel.send(content=content, file=discord.File(image))
+              os.remove(image)
+        else:
+          db.updatePlayerLastCheck(player.id, config['delay']['no_matches'])
     
     await asyncio.sleep(100)
 
@@ -70,9 +71,7 @@ async def track(ctx, playerName=None):
     playerId = await pubg.getPlayerIdByName(playerName)
     if playerId == -1:
       return False
-    else:
-      if db.playerInsert(playerName, playerId) is False:
-        return False #Player Not Found Error
+    db.playerInsert(playerName, playerId)
   
   return db.isAuthorTrackPlayer(author, channel, playerId)
 

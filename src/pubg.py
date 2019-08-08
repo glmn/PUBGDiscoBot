@@ -3,10 +3,10 @@ import pubg_python.exceptions
 from ratelimiter import RateLimiter
 from pubg_python import PUBG, Shard
 
-rateLimitter = RateLimiter(10.0, 60.0)
 class PUBGManager:
 
   def __init__(self):
+    self.rateLimitter = RateLimiter(10.0, 60.0)
     self.api = PUBG(config['tokens']['pubg'], Shard.STEAM)
 
   async def getPlayersData(self, playerIds):
@@ -17,16 +17,16 @@ class PUBGManager:
       except Exception as e:
         print(e)
 
-  @rateLimitter.wrap
   async def getPlayersByIds(self, playerIds):
+    await self.rateLimitter.wait()
     return self.api.players().filter(player_ids=playerIds)
 
-  @rateLimitter.wrap
   async def getMatchById(self, matchId):
+    await self.rateLimitter.wait()
     return self.api.matches().get(matchId)
 
-  @rateLimitter.wrap
   async def getPlayerIdByName(self, playerName):
+    await self.rateLimitter.wait()
     try:
       player = self.api.players().filter(player_names=[playerName])[0]
       return player.id

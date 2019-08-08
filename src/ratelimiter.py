@@ -1,6 +1,6 @@
 import time
 import asyncio
-
+from functools import wraps
 class RateLimiter:
 
   def __init__(self, rate, per):
@@ -8,12 +8,7 @@ class RateLimiter:
     self.per = per
     self.allowance = rate
     self.lastCheck = time.time()
-
-  async def wrap(self):
-    def wrapped():
-      return await self.wait()
-    return wrapped
-
+    
   async def wait(self):
     current = time.time()
     timePassed = current - self.lastCheck
