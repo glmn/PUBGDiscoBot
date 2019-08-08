@@ -50,7 +50,7 @@ async def Looper():
         else:
           db.updatePlayerLastCheck(player.id, config['delay']['no_matches'])
     
-    await asyncio.sleep(100)
+    await asyncio.sleep(1)
 
 @bot.event
 async def on_ready():
@@ -67,11 +67,13 @@ async def track(ctx, playerName=None):
   if playerName is None: 
     return False
   
-  if db.playerExists(playerName) is False:
+  playerId = db.searchPlayerIdByName(playerName)
+  if playerId == -1:
     playerId = await pubg.getPlayerIdByName(playerName)
     if playerId == -1:
       return False
     db.playerInsert(playerName, playerId)
+
   
   return db.isAuthorTrackPlayer(author, channel, playerId)
 

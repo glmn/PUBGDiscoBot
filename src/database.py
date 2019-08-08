@@ -33,12 +33,12 @@ class DBManager:
     result = self.authorsTable.search(Query().players.any(playerId))
     return result
 
-  def playerExists(self, playerName):
+  def searchPlayerIdByName(self, playerName):
     try:
       result = self.playersTable.search(Query().name == playerName)[0]
+      return result['id']
     except IndexError:
-      result = []
-    return len(result) > 0 
+      return -1
 
   def playerInsert(self, playerName, playerId):
     return self.playersTable.insert({'id': playerId, 'name': playerName, 'lastMatchId': '', 'analyzedMatches': [], 'lastCheck': 0})
