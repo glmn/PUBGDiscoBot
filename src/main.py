@@ -18,7 +18,6 @@ bot.remove_command('help')
 
 async def Looper():
   while True:
-    print('loop')
     await bot.wait_until_ready()
     playerIds = db.preparePlayerIds()
     if(len(playerIds) > 0):
