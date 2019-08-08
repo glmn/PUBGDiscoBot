@@ -13,9 +13,6 @@ from ratelimiter import RateLimiter
 from database import DBManager
 from pubg import PUBGManager
 
-
-TIME_BETWEEN_CHECK = 600.0
-
 db = DBManager()
 rateLimiter = RateLimiter(10.0, 60.0)
 
