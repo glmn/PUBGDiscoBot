@@ -1,12 +1,8 @@
 import os
-import pprint
 import time
 import discord
 import asyncio
-import pubg_python.exceptions
-from var_dump import var_dump
 from discord.ext.commands import Bot
-from pubg_python import PUBG, Shard
 from imgrender import renderImage
 from config import config
 from ratelimiter import RateLimiter
