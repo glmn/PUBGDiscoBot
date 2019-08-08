@@ -57,19 +57,19 @@ async def track(ctx, playerName=None):
   channel = ctx.message.channel
 
   if playerName is None: 
-    ctx.send('{}, type !pdb-track \'player_name\'',format(author.mention))
+    await ctx.send('{}, type !pdb-track \'player_name\'',format(author.mention))
   
   playerId = db.searchPlayerIdByName(playerName)
   if playerId == -1:
     playerId = await pubg.getPlayerIdByName(playerName)
     if playerId == -1:
-      ctx.send('{}, player {} not found',format(author.mention, playerName))
+      await ctx.send('{}, player {} not found'.format(author.mention, playerName))
       return False
     db.playerInsert(playerName, playerId)
 
   
   if db.isAuthorTrackPlayer(author, channel, playerId):
-    ctx.send('{}, player {} already tracked by you'.format(author.mention, playerName))
+    await ctx.send('{}, player {} already tracked by you'.format(author.mention, playerName))
 
 
 try:
