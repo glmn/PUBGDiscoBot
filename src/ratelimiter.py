@@ -9,6 +9,11 @@ class RateLimiter:
     self.allowance = rate
     self.lastCheck = time.time()
 
+  async def wrap(self):
+    def wrapped():
+      return await self.wait()
+    return wrapped
+
   async def wait(self):
     current = time.time()
     timePassed = current - self.lastCheck
