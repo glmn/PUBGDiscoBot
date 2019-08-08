@@ -57,5 +57,5 @@ class DBManager:
         self.authorsTable.write_back([result])
     else:
       self.authorsTable.insert({'name': str(author), 'id': author.id, 'guild': author.guild.id, 'channelId': channel.id, 'players': [playerId]})
-    return True
+    return False
 
