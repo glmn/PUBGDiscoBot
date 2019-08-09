@@ -30,7 +30,7 @@ Bot uses prefix `!pdb-` to detect mention. So every command should start from th
   <th class="tg-0pky">command</th>
   <th class="tg-0pky">argument</th>
   <th class="tg-0pky">description</th>
-  <th class="tg-0lax" rowspan="5"><img width="320" alt="PUBGDiscoBot" src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/commands.png" ></th>
+  <th class="tg-0lax" rowspan="5"><img width="370" alt="PUBGDiscoBot" src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/commands.png" ></th>
   </tr>
   <tr>
   <td class="tg-0pky"><code>track</code></td>
