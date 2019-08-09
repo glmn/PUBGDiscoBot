@@ -34,7 +34,7 @@ async def Looper():
               db.assignAnalyzedMatch(player.id, match.id)
               authors = db.findAuthorsByPlayerId(player.id)
               image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
-              mention = '<@{}>,'.format(*[x['id'] for x in authors])
+              mention = ','.join(['<@{}>'.format(x['id']) for x in authors])
               channel = bot.get_channel(authors[0]['channelId'])
               content = '{} Match: {}'.format(mention, match.id)
               await channel.send(content=content, file=discord.File(image))
