@@ -18,3 +18,33 @@ Bot that notify all your friends in discord channel about your last game where y
 * Discord API based on <a href="https://github.com/Rapptz/discord.py">discord.py</a> library
 * PUBG API implemented with <a href="https://github.com/ramonsaraiva/pubg-python">pubg_python</a> project
 
+
+<hr>
+
+### Bot commands
+Bot uses prefix `!pdb-` to detect mention. So every command should start from this prefix plus command from the list down below.
+
+
+<table>
+  <tr>
+  <th class="tg-0pky">command</th>
+  <th class="tg-0pky">argument</th>
+  <th class="tg-0pky">description</th>
+  <th class="tg-0lax" rowspan="4"><img width="320" alt="PUBGDiscoBot" src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/commands.png" ></th>
+  </tr>
+  <tr>
+    <td class="tg-0pky">`track`</td>
+    <td class="tg-0pky">`player name`</td>
+    <td class="tg-0pky">*Put player to your track list*</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">`untrack`</td>
+    <td class="tg-0pky">`player name`</td>
+    <td class="tg-0pky">*Remove player from your track list*<br></td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">`list`</td>
+    <td class="tg-0pky"></td>
+    <td class="tg-0pky">*Shows your track list*<br></td>
+  </tr>
+</table>
