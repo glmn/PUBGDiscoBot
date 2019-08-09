@@ -68,7 +68,7 @@ class DBManager:
     except IndexError:
       result = []
 
-    if playerId in result['players']:
+    if hasattr(result, 'players') and playerId in result['players']:
       return True
 
     if(len(result) == 0):

@@ -55,6 +55,7 @@ async def on_ready():
 async def track(ctx, playerName=None):
   author = ctx.message.author
   channel = ctx.message.channel
+  await ctx.message.delete()
 
   if playerName is None: 
     await ctx.send('{}, type !pdb-track \'player_name\''.format(author.mention))
@@ -77,6 +78,7 @@ async def track(ctx, playerName=None):
 async def untrack(ctx, playerName=None):
   author = ctx.message.author
   channel = ctx.message.channel
+  await ctx.message.delete()
   
   if playerName is None: 
     await ctx.send('{}, type !pdb-untrack \'player_name\''.format(author.mention))
