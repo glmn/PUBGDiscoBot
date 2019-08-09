@@ -30,21 +30,26 @@ Bot uses prefix `!pdb-` to detect mention. So every command should start from th
   <th class="tg-0pky">command</th>
   <th class="tg-0pky">argument</th>
   <th class="tg-0pky">description</th>
-  <th class="tg-0lax" rowspan="4"><img width="320" alt="PUBGDiscoBot" src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/commands.png" ></th>
+  <th class="tg-0lax" rowspan="5"><img width="320" alt="PUBGDiscoBot" src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/commands.png" ></th>
   </tr>
   <tr>
-    <td class="tg-0pky">`track`</td>
-    <td class="tg-0pky">`player name`</td>
-    <td class="tg-0pky">*Put player to your track list*</td>
+  <td class="tg-0pky"><code>track</code></td>
+    <td class="tg-0pky"><code>player_name</code></td>
+    <td class="tg-0pky"><i>Put player to your track list</i></td>
   </tr>
   <tr>
-    <td class="tg-0pky">`untrack`</td>
-    <td class="tg-0pky">`player name`</td>
-    <td class="tg-0pky">*Remove player from your track list*<br></td>
+    <td class="tg-0pky"><code>untrack</code></td>
+    <td class="tg-0pky"><code>player_name</code></td>
+    <td class="tg-0pky"><i>Remove player from your track list</i></td>
   </tr>
   <tr>
-    <td class="tg-0pky">`list`</td>
+  <td class="tg-0pky"><code>last</code></code></td>
+  <td class="tg-0pky"><code>player_name</code></td>
+    <td class="tg-0pky"><i>Shows player last top-3 match</td>
+  </tr>
+  <tr>
+  <td class="tg-0pky"><code>list</code></code></td>
     <td class="tg-0pky"></td>
-    <td class="tg-0pky">*Shows your track list*<br></td>
+    <td class="tg-0pky"><i>Shows your track list</td>
   </tr>
 </table>
