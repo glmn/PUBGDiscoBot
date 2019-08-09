@@ -33,12 +33,15 @@ async def Looper():
             if not db.isInAnalyzedMatches(player.id, match.id):
               db.assignAnalyzedMatch(player.id, match.id)
               authors = db.findAuthorsByPlayerId(player.id)
-              image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
-              mention = ','.join(['<@{}>'.format(x['id']) for x in authors])
-              channel = bot.get_channel(authors[0]['channelId'])
-              content = '{} Match: {}'.format(mention, match.id)
-              await channel.send(content=content, file=discord.File(image))
-              os.remove(image)
+              if len(authors) > 0:
+                image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
+                mention = ','.join(['<@{}>'.format(x['id']) for x in authors])
+                channel = bot.get_channel(authors[0]['channelId'])
+                content = '{} Match: {}'.format(mention, match.id)
+                await channel.send(content=content, file=discord.File(image))
+                os.remove(image)
+              else:
+                continue
         else:
           db.updatePlayerLastCheck(player.id, config['delay']['no_matches'])
     
