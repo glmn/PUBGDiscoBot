@@ -35,7 +35,8 @@ class DBManager:
 
   def searchPlayerIdByName(self, playerName):
     try:
-      result = self.playersTable.search(Query().name == playerName)[0]
+      Player = Query()
+      result = self.playersTable.search(Player.name == playerName)[0]
       return result['id']
     except IndexError:
       return -1
@@ -43,19 +44,44 @@ class DBManager:
   def playerInsert(self, playerName, playerId):
     return self.playersTable.insert({'id': playerId, 'name': playerName, 'lastMatchId': '', 'analyzedMatches': [], 'lastCheck': 0})
 
+  def playerRemoveFromAuthor(self, author, channel, playerId):
+    try:
+      Author = Query()
+      result = self.authorsTable.search((Author.id == author.id) & (Author.channelId == channel.id))[0]
+    except IndexError:
+      return False
+    
+    if playerId in result['players']:
+      result['players'].remove(playerId)
+      self.authorsTable.write_back([result])
+      return True
+    
+    return False
+
+  def insertAuthor(self, author, channel):
+    self.authorsTable.insert({'name': str(author), 'id': author.id, 'guild': author.guild.id, 'channelId': channel.id, 'players': []})
+
   def isAuthorTrackPlayer(self, author, channel, playerId):
     try:
-      result = self.authorsTable.search(Query().id == author.id)[0]
+      Author = Query()
+      result = self.authorsTable.search((Author.id == author.id) & (Author.channelId == channel.id))[0]
     except IndexError:
       result = []
-    
-    if len(result) > 0:
-      if playerId in result['players']:
-        return True
-      else:
-        result['players'].append(playerId)
-        self.authorsTable.write_back([result])
-    else:
-      self.authorsTable.insert({'name': str(author), 'id': author.id, 'guild': author.guild.id, 'channelId': channel.id, 'players': [playerId]})
+
+    if playerId in result['players']:
+      return True
+
+    if(len(result) == 0):
+      self.insertAuthor(author, channel)
     return False
+
+  def appendPlayerToAuthor(self, author, channel, playerId):
+    try:
+      Author = Query()
+      result = self.authorsTable.search((Author.id == author.id) & (Author.channelId == channel.id))[0]
+      result['players'].append(playerId)
+      self.authorsTable.write_back([result])
+      return True
+    except IndexError:
+      return False
 

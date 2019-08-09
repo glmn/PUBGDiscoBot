@@ -57,7 +57,7 @@ async def track(ctx, playerName=None):
   channel = ctx.message.channel
 
   if playerName is None: 
-    await ctx.send('{}, type !pdb-track \'player_name\'',format(author.mention))
+    await ctx.send('{}, type !pdb-track \'player_name\''.format(author.mention))
   
   playerId = db.searchPlayerIdByName(playerName)
   if playerId == -1:
@@ -66,10 +66,30 @@ async def track(ctx, playerName=None):
       await ctx.send('{}, player {} not found'.format(author.mention, playerName))
       return False
     db.playerInsert(playerName, playerId)
-
-  
-  if db.isAuthorTrackPlayer(author, channel, playerId):
+    
+  if not db.isAuthorTrackPlayer(author, channel, playerId):
+    if db.appendPlayerToAuthor(author, channel, playerId):
+      await ctx.send('{}, player {} added to your track list '.format(author.mention, playerName))
+  else:
     await ctx.send('{}, player {} already tracked by you'.format(author.mention, playerName))
+
+@bot.command(pass_context=True)
+async def untrack(ctx, playerName=None):
+  author = ctx.message.author
+  channel = ctx.message.channel
+  
+  if playerName is None: 
+    await ctx.send('{}, type !pdb-untrack \'player_name\''.format(author.mention))
+  
+  playerId = db.searchPlayerIdByName(playerName)
+  if playerId == -1:
+    await ctx.send('{}, {} doesn\'t found in tracked players'.format(author.mention, playerName))
+    return False
+
+  if db.playerRemoveFromAuthor(author, channel, playerId):
+    await ctx.send('{}, {} removed from your track list'.format(author.mention, playerName))
+  else:
+    await ctx.send('{}, {} is not in your track list'.format(author.mention, playerName))
 
 
 try:
