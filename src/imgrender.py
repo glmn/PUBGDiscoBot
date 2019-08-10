@@ -45,8 +45,8 @@ def renderImage(mapName, mode, position, teammates, rostersCount):
 
   for index, mate in enumerate(teammates):
     padding = 24
-    metrics = ['KILL', 'DMG']
-    values =  [mate.kills, round(mate.damage_dealt)]
+    metrics = ['KILL', 'AST', 'DMG', 'DST']
+    values =  [mate.kills, mate.assists, round(mate.damage_dealt), round(mate.longest_kill)]
 
     draw.ellipse((10, margin + 5, 18, margin + 5 + 8), fill=playerColors[index])
     draw.text((24, margin), mate.name.upper(), fill=white, font=fontBold)
