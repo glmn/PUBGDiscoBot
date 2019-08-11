@@ -62,6 +62,13 @@ async def track(ctx, playerName=None):
 
   if playerName is None: 
     await ctx.send('{}, type !pdb-track \'player_name\''.format(author.mention))
+
+  if config['bot']['track_only_one']:
+    if db.getAuthorTrackedPlayers(author) > 0:
+      ctx.send('{} only one track allowed, untrack to track new'.format(author.mention))
+      return False
+
+
   
   playerId = db.searchPlayerIdByName(playerName)
   if playerId == -1:

@@ -41,6 +41,14 @@ class DBManager:
     except IndexError:
       return -1
 
+  def getAuthorTrackedPlayers(self, author):
+    try:
+      Author = Query()
+      result = self.authorsTable.search(Author.id == author.id)[0]
+      return len(result)
+    except IndexError:
+      return 0
+
   def playerInsert(self, playerName, playerId):
     return self.playersTable.insert({'id': playerId, 'name': playerName, 'lastMatchId': '', 'analyzedMatches': [], 'lastCheck': 0})
 
