@@ -1,18 +1,21 @@
 config = {
+  'bot': {
+    'track_only_one': True
+  },
   'delay': {
     'simple': 600.0,
     'no_matches': 1200.0
   },
   'tokens': {
-    'discord': 'DISCORD TOKEN HERE',
-    'pubg': 'PUBG TOKEN HERE'
+    'discord': 'NDg1MjE0MDg4NzYzNTM5NDY2.XVAEcA.bo2kLk026AYENNOVi8HzEAZWy1w',
+    'pubg': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI5Zjk5YTA0MC04MDI1LTAxMzctYmMyOS00MWRhZDE1OWU5NDIiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTYyMjAyMjc5LCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6InNwZWVkc3Rlci1nZ2ctIn0.VKB-CCGzg9uJDCti06wshILSSR72NUR8siPWu6Pp5Hg'
   },
   'database': {
     'path': 'db.json'
   },
   'discord': {
     'activity': {
-      'name': 'cOdInG...'
+      'name': '`!pdb-`'
     }
   }
 }

@@ -65,7 +65,7 @@ async def track(ctx, playerName=None):
 
   if config['bot']['track_only_one']:
     if db.getAuthorTrackedPlayers(author) > 0:
-      ctx.send('{} only one track allowed, untrack to track new'.format(author.mention))
+      await ctx.send('{} only one track allowed, untrack to track new'.format(author.mention))
       return False
 
 
