@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/preview.gif" alt="PUBGDiscoBot" align="center">
+
 <h4 align="center">
     Track and push after-match statistics to discord channel<br>
     <img src="https://img.shields.io/github/last-commit/glmn/PUBGDiscoBot?style=flat">

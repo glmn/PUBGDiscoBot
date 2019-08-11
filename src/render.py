@@ -23,13 +23,13 @@ def renderImage(mapName, mode, position, teammates, rostersCount):
   fontPosition = ImageFont.truetype("fonts/MyriadPro-Bold.ttf", 15)
 
   #Sizes
-  padding = 24
   margin = 40
   userIconPadding = 89
 
   #Colors
   white = (252, 255, 255, 255)
   grey = (208, 225, 229, 255)
+  playerColors = [(253, 204, 9, 255), (207,207,207,255), (207,155,104,255), (75,124,207,255)]
 
   #Position
   winText = 'TOP-' + str(position)
@@ -43,23 +43,26 @@ def renderImage(mapName, mode, position, teammates, rostersCount):
   #Sort mates by kills count
   teammates.sort(key=lambda x:x.kills, reverse=True)
 
-  for mate in teammates:
-    name = mate.name.upper()
-    nameWidth = padding + fontBold.getsize(name)[0]
-    killWidth = padding + nameWidth + fontBold.getsize('KILL')[0] - 3
-    killsNumberWidth = padding + killWidth + fontBold.getsize(str(mate.kills))[0] - 25
-    dmgWidth = padding + killsNumberWidth + fontBold.getsize('DMG')[0] - 5
+  for index, mate in enumerate(teammates):
+    padding = 24
+    metrics = ['KILL', 'AST', 'DMG', 'DST']
+    values =  [mate.kills, mate.assists, round(mate.damage_dealt), round(mate.longest_kill)]
 
-    draw.ellipse((10, margin + 5, 18, margin + 5 + 8), fill=(253, 204, 9, 255))
-    draw.text((24, margin), name, fill=white, font=fontBold)
-    draw.text((nameWidth + 18, margin), 'KILL', fill=grey, font=fontRegular)
-    draw.text((killWidth, margin), str(mate.kills), fill=white, font=fontBold)
-    draw.text((killsNumberWidth + 18, margin), 'DMG', fill=grey, font=fontRegular)
-    draw.text((dmgWidth, margin), str(round(mate.damage_dealt)), fill=white, font=fontBold)
+    draw.ellipse((10, margin + 5, 18, margin + 5 + 8), fill=playerColors[index])
+    draw.text((24, margin), mate.name.upper(), fill=white, font=fontBold)
+
+    padding += fontBold.getsize(mate.name.upper())[0] + 10
+
+    for index, metric in enumerate(metrics):
+      value = str(values[index])
+      draw.text((padding, margin), metric, fill=grey, font=fontRegular)
+      padding += fontRegular.getsize(metric)[0] + 3
+      draw.text((padding, margin), value, fill=white, font=fontBold)
+      padding += fontBold.getsize(value)[0] + 15
 
     margin += 20
 
-  area = (0, 0, 615, margin + padding)
+  area = (0, 0, 615, margin + 24)
   image = image.crop(area)
 
   imageName = '{}-{}-{}.png'.format(time.time(), mapName, position)

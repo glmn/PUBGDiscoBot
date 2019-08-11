@@ -3,7 +3,7 @@ import time
 import discord
 import asyncio
 from discord.ext.commands import Bot
-from imgrender import renderImage
+from render import renderImage
 from config import config
 from ratelimiter import RateLimiter
 from database import DBManager
