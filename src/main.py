@@ -65,7 +65,8 @@ async def track(ctx, playerName=None):
     return False
 
   if config['bot']['track_only_one']:
-    if db.getAuthorTrackedPlayers(author) > 0:
+    trackedPlayers = db.getAuthorTrackedPlayers(author)
+    if len(trackedPlayers['players']) > 0:
       await ctx.send('{} only one track allowed, untrack to track new'.format(author.mention))
       return False
 
@@ -105,6 +106,21 @@ async def untrack(ctx, playerName=None):
   else:
     await ctx.send('{}, {} is not in your track list'.format(author.mention, playerName))
 
+@bot.command(pass_context=True)
+async def list(ctx):
+  author = ctx.message.author
+  channel = ctx.message.channel
+  await ctx.message.delete()
+
+  author = ctx.message.author
+  channel = ctx.message.channel
+  trackedPlayers = db.getAuthorTrackedPlayers(author)
+  if len(trackedPlayers['players']) == 0:
+    await ctx.send('{}, your track list is empty'.format(author.mention))
+    return False
+
+  msg = ','.join(trackedPlayers['players'])
+  await ctx.send('{}, track list: {}'.format(author.mention, msg))
 
 try:
   bot.run(config['tokens']['discord'])

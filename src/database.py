@@ -45,7 +45,7 @@ class DBManager:
     try:
       Author = Query()
       result = self.authorsTable.search(Author.id == author.id)[0]
-      return len(result['players'])
+      return result
     except IndexError:
       return 0
 
