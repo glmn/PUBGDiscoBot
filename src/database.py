@@ -41,6 +41,10 @@ class DBManager:
     except IndexError:
       return -1
 
+  def getPlayerNamesByIds(self, playerIds):
+    result = self.playersTable.search(where('id').test(lambda v: v in playerIds))
+    return list(map(lambda v: v['name'], result))
+
   def getAuthorTrackedPlayers(self, author):
     try:
       Author = Query()

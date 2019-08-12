@@ -114,12 +114,12 @@ async def list(ctx):
 
   author = ctx.message.author
   channel = ctx.message.channel
-  trackedPlayers = db.getAuthorTrackedPlayers(author)
-  if len(trackedPlayers['players']) == 0:
+  trackedPlayers = db.getAuthorTrackedPlayers(author)['players']
+  if len(trackedPlayers) == 0:
     await ctx.send('{}, your track list is empty'.format(author.mention))
     return False
 
-  msg = ','.join(trackedPlayers['players'])
+  msg = ','.join(db.getPlayerNamesByIds(trackedPlayers))
   await ctx.send('{}, track list: {}'.format(author.mention, msg))
 
 try:
