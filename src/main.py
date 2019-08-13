@@ -29,7 +29,7 @@ async def Looper():
           match = await pubg.getMatchById(player.matches[0])
           roster = pubg.findRosterByName(player.name, match.rosters)
           rank = roster.stats['rank']
-          if rank <= 3:
+          if rank <= config['bot']['rank_limit']:
             if not db.isInAnalyzedMatches(player.id, match.id):
               db.insertAnalyzedMatch(player.id, match.id)
               authors = db.getAuthorsByPlayerId(player.id)
@@ -69,8 +69,6 @@ async def track(ctx, playerName=None):
     if hasattr(trackedPlayers, 'players'):
       await ctx.send('{} only one track allowed, untrack to track new'.format(author.mention))
       return False
-
-
   
   playerId = db.getPlayerIdByName(playerName)
   if playerId == -1:
