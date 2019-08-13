@@ -84,7 +84,7 @@ class DBManager:
       result = self.authorsTable.search(Author.id == author.id)[0]
       return result
     except IndexError:
-      return 0
+      return []
 
   def removePlayerFromAuthor(self, author, channel, playerId):
     try:
