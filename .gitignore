@@ -1,3 +1,4 @@
 __pycache__
 src/db.json
 src/config.py
+.vscode/.ropeproject/objectdb

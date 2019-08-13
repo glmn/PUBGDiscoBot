@@ -19,7 +19,7 @@ bot.remove_command('help')
 async def Looper():
   while True:
     await bot.wait_until_ready()
-    playerIds = db.preparePlayerIds()
+    playerIds = db.getPlayerIds()
     if(len(playerIds) > 0):
       playersData = await pubg.getPlayersData(playerIds)
       
@@ -31,8 +31,8 @@ async def Looper():
           rank = roster.stats['rank']
           if rank <= 3:
             if not db.isInAnalyzedMatches(player.id, match.id):
-              db.assignAnalyzedMatch(player.id, match.id)
-              authors = db.findAuthorsByPlayerId(player.id)
+              db.insertAnalyzedMatch(player.id, match.id)
+              authors = db.getAuthorsByPlayerId(player.id)
               if len(authors) > 0:
                 image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
                 mention = ','.join(['<@{}>'.format(x['id']) for x in authors])
@@ -72,16 +72,16 @@ async def track(ctx, playerName=None):
 
 
   
-  playerId = db.searchPlayerIdByName(playerName)
+  playerId = db.getPlayerIdByName(playerName)
   if playerId == -1:
     playerId = await pubg.getPlayerIdByName(playerName)
     if playerId == -1:
       await ctx.send('{}, player {} not found'.format(author.mention, playerName))
       return False
-    db.playerInsert(playerName, playerId)
+    db.insertNewPlayer(playerName, playerId)
     
   if not db.isAuthorTrackPlayer(author, channel, playerId):
-    if db.appendPlayerToAuthor(author, channel, playerId):
+    if db.insertPlayerToAuthor(author, channel, playerId):
       await ctx.send('{}, player {} added to your track list '.format(author.mention, playerName))
   else:
     await ctx.send('{}, player {} already tracked by you'.format(author.mention, playerName))
@@ -96,12 +96,12 @@ async def untrack(ctx, playerName=None):
     await ctx.send('{}, type !pdb-untrack \'player_name\''.format(author.mention))
     return False
   
-  playerId = db.searchPlayerIdByName(playerName)
+  playerId = db.getPlayerIdByName(playerName)
   if playerId == -1:
     await ctx.send('{}, {} doesn\'t found in tracked players'.format(author.mention, playerName))
     return False
 
-  if db.playerRemoveFromAuthor(author, channel, playerId):
+  if db.removePlayerFromAuthor(author, channel, playerId):
     await ctx.send('{}, {} removed from your track list'.format(author.mention, playerName))
   else:
     await ctx.send('{}, {} is not in your track list'.format(author.mention, playerName))
