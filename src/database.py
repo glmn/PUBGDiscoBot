@@ -78,10 +78,10 @@ class DBManager:
     result = self.authorsTable.search(Query().players.any(playerId))
     return result
 
-  def getAuthorTrackedPlayers(self, author):
+  def getAuthorTrackedPlayers(self, author, channel):
     try:
       Author = Query()
-      result = self.authorsTable.search(Author.id == author.id)[0]
+      result = self.authorsTable.search((Author.id == author.id) * Author.channelId == channel.id)[0]
       return result
     except IndexError:
       return []

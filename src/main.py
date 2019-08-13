@@ -63,7 +63,7 @@ async def track(ctx, playerName=None):
     return False
 
   if config['bot']['track_only_one']:
-    trackedPlayers = db.getAuthorTrackedPlayers(author)
+    trackedPlayers = db.getAuthorTrackedPlayers(author, channel)
     if hasattr(trackedPlayers, 'players'):
       await ctx.send('{} only one track allowed, untrack to track new'.format(author.mention))
       return False
@@ -110,7 +110,7 @@ async def list(ctx):
 
   author = ctx.message.author
   channel = ctx.message.channel
-  trackedPlayers = db.getAuthorTrackedPlayers(author)['players']
+  trackedPlayers = db.getAuthorTrackedPlayers(author, channel)['players']
   if len(trackedPlayers) == 0:
     await ctx.send('{}, your track list is empty'.format(author.mention))
     return False
