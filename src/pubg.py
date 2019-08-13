@@ -22,7 +22,6 @@ class PUBGManager:
     return self.api.players().filter(player_ids=playerIds)
 
   async def getMatchById(self, matchId):
-    await self.rateLimitter.wait()
     return self.api.matches().get(matchId)
 
   async def getPlayerIdByName(self, playerName):
