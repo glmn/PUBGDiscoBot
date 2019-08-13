@@ -10,8 +10,6 @@ from database import DBManager
 from pubg import PUBGManager
 
 db = DBManager()
-rateLimiter = RateLimiter(10.0, 60.0)
-
 pubg = PUBGManager()
 bot = Bot(command_prefix="!pdb-", pm_help=False)
 bot.remove_command('help')
