@@ -62,13 +62,15 @@ async def track(ctx, playerName=None):
   await ctx.message.delete()
 
   if playerName is None: 
-    await ctx.send('{}, type !pdb-track \'player_name\''.format(author.mention))
+    msg = await ctx.send('{}, type !pdb-track \'player_name\''.format(author.mention))
+    await msg.delete(delay=config['bot']['delete_delay'])
     return False
 
   if config['bot']['track_only_one']:
     trackedPlayers = db.getAuthorTrackedPlayers(author, channel)
     if len(trackedPlayers) > 0:
-      await ctx.send('{} only one track allowed, untrack to track new'.format(author.mention))
+      msg = await ctx.send('{} only one track allowed, untrack to track new'.format(author.mention))
+      await msg.delete(delay=config['bot']['delete_delay'])
       return False
   
   playerId = db.getPlayerIdByName(playerName)
@@ -81,45 +83,53 @@ async def track(ctx, playerName=None):
     
   if not db.isAuthorTrackPlayer(author, channel, playerId):
     if db.insertPlayerToAuthor(author, channel, playerId):
-      await ctx.send('{}, player {} added to your track list '.format(author.mention, playerName))
+      msg = await ctx.send('{}, player {} added to your track list '.format(author.mention, playerName))
+      await msg.delete(delay=config['bot']['delete_delay'])
   else:
-    await ctx.send('{}, player {} already tracked by you'.format(author.mention, playerName))
+    msg = await ctx.send('{}, player {} already tracked by you'.format(author.mention, playerName))
+    await msg.delete(delay=config['bot']['delete_delay'])
 
 @bot.command(pass_context=True)
 async def untrack(ctx, playerName=None):
   author = ctx.message.author
   channel = ctx.message.channel
-  await ctx.message.delete()
+  await ctx.message.delete(delay=config['bot']['delete_delay'])
   
   if playerName is None: 
-    await ctx.send('{}, type !pdb-untrack \'player_name\''.format(author.mention))
+    msg = await ctx.send('{}, type !pdb-untrack \'player_name\''.format(author.mention))
+    await msg.delete(delay=config['bot']['delete_delay'])
     return False
   
   playerId = db.getPlayerIdByName(playerName)
   if playerId == -1:
-    await ctx.send('{}, {} doesn\'t found in tracked players'.format(author.mention, playerName))
+    msg = await ctx.send('{}, {} doesn\'t found in tracked players'.format(author.mention, playerName))
+    await msg.delete(delay=config['bot']['delete_delay'])
     return False
 
   if db.removePlayerFromAuthor(author, channel, playerId):
-    await ctx.send('{}, {} removed from your track list'.format(author.mention, playerName))
+    msg = await ctx.send('{}, {} removed from your track list'.format(author.mention, playerName))
+    await msg.delete(delay=config['bot']['delete_delay'])
   else:
-    await ctx.send('{}, {} is not in your track list'.format(author.mention, playerName))
+    msg = await ctx.send('{}, {} is not in your track list'.format(author.mention, playerName))
+    await msg.delete(delay=config['bot']['delete_delay'])
 
 @bot.command(pass_context=True)
 async def list(ctx):
   author = ctx.message.author
   channel = ctx.message.channel
-  await ctx.message.delete()
+  await ctx.message.delete(delay=config['bot']['delete_delay'])
 
   author = ctx.message.author
   channel = ctx.message.channel
   trackedPlayers = db.getAuthorTrackedPlayers(author, channel)
   if len(trackedPlayers) == 0:
-    await ctx.send('{}, your track list is empty'.format(author.mention))
+    msg = await ctx.send('{}, your track list is empty'.format(author.mention))
+    await msg.delete(delay=config['bot']['delete_delay'])
     return False
 
-  msg = ','.join(db.getPlayerNamesByIds(trackedPlayers))
-  await ctx.send('{}, track list: {}'.format(author.mention, msg))
+  content = ','.join(db.getPlayerNamesByIds(trackedPlayers))
+  msg = await ctx.send('{}, track list: {}'.format(author.mention, content))
+  await msg.delete(delay=config['bot']['delete_delay'])
 
 try:
   bot.run(config['tokens']['discord'])

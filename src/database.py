@@ -12,11 +12,7 @@ class DBManager:
 
   # players
   def isPlayerExists(self, playerId):
-    try:
-      result = self.playersTable.search(Query().id == playerId)[0]
-      return True
-    except IndexError:
-      return False
+    return len(self.playersTable.search(Query().id == playerId)) > 0
 
   def isInAnalyzedMatches(self, playerId, matchId):
     player = self.playersTable.search((Query().analyzedMatches.any(matchId)) & (Query().id == playerId))
