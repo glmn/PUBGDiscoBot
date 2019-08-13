@@ -11,6 +11,13 @@ class DBManager:
     self.guildsTable = self.db.table('guilds')
 
   # players
+  def isPlayerExists(self, playerId):
+    try:
+      result = self.playersTable.search(Query().id == playerId)[0]
+      return True
+    except IndexError:
+      return False
+
   def isInAnalyzedMatches(self, playerId, matchId):
     player = self.playersTable.search((Query().analyzedMatches.any(matchId)) & (Query().id == playerId))
     return len(player) > 0
@@ -81,8 +88,8 @@ class DBManager:
   def getAuthorTrackedPlayers(self, author, channel):
     try:
       Author = Query()
-      result = self.authorsTable.search((Author.id == author.id) * Author.channelId == channel.id)[0]
-      return result
+      result = self.authorsTable.search((Author.id == author.id) & (Author.channelId == channel.id))[0]
+      return result['players']
     except IndexError:
       return []
 

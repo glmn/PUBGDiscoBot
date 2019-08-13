@@ -23,23 +23,26 @@ async def Looper():
       
       for player in playersData:
         if hasattr(player, 'matches'):
+          authors = []
           db.updatePlayerLastCheck(player.id)
           match = await pubg.getMatchById(player.matches[0])
           roster = pubg.findRosterByName(player.name, match.rosters)
+          participants = roster.participants
           rank = roster.stats['rank']
           if rank <= config['bot']['rank_limit']:
-            if not db.isInAnalyzedMatches(player.id, match.id):
-              db.insertAnalyzedMatch(player.id, match.id)
-              authors = db.getAuthorsByPlayerId(player.id)
-              if len(authors) > 0:
-                image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
-                mention = ','.join(['<@{}>'.format(x['id']) for x in authors])
-                channel = bot.get_channel(authors[0]['channelId'])
-                content = '{} Match: {}'.format(mention, match.id)
-                await channel.send(content=content, file=discord.File(image))
-                os.remove(image)
-              else:
-                continue
+            for participant in participants:
+              if db.isPlayerExists(participant.player_id) and not db.isInAnalyzedMatches(participant.player_id, match.id):
+                db.insertAnalyzedMatch(participant.player_id, match.id)
+                authors += db.getAuthorsByPlayerId(participant.player_id)
+            if len(authors) > 0:
+              image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
+              mention = ','.join(['<@{}>'.format(x['id']) for x in authors])
+              channel = bot.get_channel(authors[0]['channelId'])
+              content = '{} Match: {}'.format(mention, match.id)
+              await channel.send(content=content, file=discord.File(image))
+              os.remove(image)
+            else:
+              continue
         else:
           db.updatePlayerLastCheck(player.id, config['delay']['no_matches'])
     
@@ -64,7 +67,7 @@ async def track(ctx, playerName=None):
 
   if config['bot']['track_only_one']:
     trackedPlayers = db.getAuthorTrackedPlayers(author, channel)
-    if hasattr(trackedPlayers, 'players'):
+    if len(trackedPlayers) > 0:
       await ctx.send('{} only one track allowed, untrack to track new'.format(author.mention))
       return False
   
@@ -110,7 +113,7 @@ async def list(ctx):
 
   author = ctx.message.author
   channel = ctx.message.channel
-  trackedPlayers = db.getAuthorTrackedPlayers(author, channel)['players']
+  trackedPlayers = db.getAuthorTrackedPlayers(author, channel)
   if len(trackedPlayers) == 0:
     await ctx.send('{}, your track list is empty'.format(author.mention))
     return False
