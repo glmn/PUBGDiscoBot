@@ -57,3 +57,7 @@ Bot uses prefix `!pdb-` to detect mention. So every command should start from th
     <td class="tg-0pky"><i>Shows your track list</td>
   </tr>
 </table>
+
+### Multitrack
+<img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/multitrack.png" alt="PUBGDiscoBot" align="center">
+If multiple channel participants track same player or track different players but in same game roster, then bot will send only one message with all participants mentions.
