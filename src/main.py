@@ -2,6 +2,7 @@ import os
 import time
 import discord
 import asyncio
+from discord.ext import commands
 from discord.ext.commands import Bot
 from render import renderImage
 from config import config
@@ -55,7 +56,8 @@ async def on_ready():
   bot.loop.create_task(Looper())
 
 
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, guild_only=True)
+@commands.guild_only()
 async def track(ctx, playerName=None):
   author = ctx.message.author
   channel = ctx.message.channel
@@ -89,7 +91,8 @@ async def track(ctx, playerName=None):
     msg = await ctx.send('{}, player {} already tracked by you'.format(author.mention, playerName))
     await msg.delete(delay=config['bot']['delete_delay'])
 
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, guild_only=True)
+@commands.guild_only()
 async def untrack(ctx, playerName=None):
   author = ctx.message.author
   channel = ctx.message.channel
@@ -113,7 +116,8 @@ async def untrack(ctx, playerName=None):
     msg = await ctx.send('{}, {} is not in your track list'.format(author.mention, playerName))
     await msg.delete(delay=config['bot']['delete_delay'])
 
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, guild_only=True)
+@commands.guild_only()
 async def list(ctx):
   author = ctx.message.author
   channel = ctx.message.channel
@@ -129,7 +133,8 @@ async def list(ctx):
   msg = await ctx.send('{}, track list: {}'.format(author.mention, content))
   await msg.delete(delay=config['bot']['delete_delay'])
 
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, guild_only=True)
+@commands.guild_only()
 async def last(ctx, playerName=None):
   author = ctx.message.author
   channel = ctx.message.channel
