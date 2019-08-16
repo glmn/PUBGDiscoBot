@@ -1,4 +1,5 @@
 import sys
+import copy
 import pytest
 sys.path.insert(0, 'src')
 sys.path.insert(0, '../src')
@@ -44,6 +45,9 @@ def test_insert_player_to_author():
     result = db.authorsTable.search(Query().id == dataset.author.id)[0]
     assert 'players' in result
     assert result['players'][0] == dataset.player.id
+    wrongChannel = copy.deepcopy(dataset.channel)
+    wrongChannel.id = '213231321'
+    assert db.insertPlayerToAuthor(dataset.author, wrongChannel, dataset.player.id) == False
 
 def test_insert_new_player():
     db.insertNewPlayer(dataset.player.name, dataset.player.id)
@@ -71,6 +75,11 @@ def test_get_player_names_by_ids():
 
 def test_get_player_id_by_name():
     assert db.getPlayerIdByName(dataset.player.name) == dataset.player.id
+    assert db.getPlayerIdByName('wrongPlayerName') == -1
+
+def test_get_player_name_by_id():
+    assert db.getPlayerNameById(dataset.player.id) == dataset.player.name
+    assert db.getPlayerNameById('wrongPlayerId') == -1
 
 def test_update_player_last_cheack():
     db.updatePlayerLastCheck(dataset.player.id)
@@ -78,6 +87,10 @@ def test_update_player_last_cheack():
 
 def test_is_author_track_player():
     assert db.isAuthorTrackPlayer(dataset.author, dataset.channel, dataset.player.id)
+    assert db.isAuthorTrackPlayer(dataset.author, dataset.channel, 'wrongPlayerId') == False
+    wrongChannel = copy.deepcopy(dataset.channel)
+    wrongChannel.id = '4124421412'
+    assert db.isAuthorTrackPlayer(dataset.author, wrongChannel, 'wrongPlayerId') == False
 
 def test_get_authors_by_player_id():
     authors = db.getAuthorsByPlayerId(dataset.player.id)
@@ -87,10 +100,21 @@ def test_get_author_tracked_players():
     players = db.getAuthorTrackedPlayers(dataset.author, dataset.channel)
     assert dataset.player.id in players
     assert 'testPlayerId' not in players
+    wrongChannel = copy.deepcopy(dataset.channel)
+    wrongChannel.id = '521521231'
+    result = db.getAuthorTrackedPlayers(dataset.author, wrongChannel)
+    assert len(result) == 0
 
 def test_remove_player_from_author():
     db.removePlayerFromAuthor(dataset.author, dataset.channel, dataset.player.id)
     assert len(db.getAuthorTrackedPlayers(dataset.author, dataset.channel)) == 0
-    
+    wrongChannel = copy.deepcopy(dataset.channel)
+    wrongChannel.id = '66123321321'
+    assert db.removePlayerFromAuthor(dataset.author, wrongChannel, dataset.player.id) == False
+    assert db.removePlayerFromAuthor(dataset.author, dataset.channel, 'wrongPlayerId') == False
+
 def test_get_player_last_match_id():
     assert db.getPlayerLastMatchId(dataset.player.id) == dataset.match.id
+    assert db.getPlayerLastMatchId('wrongPlayerId') == False
+    db.insertNewPlayer('newPlayerName', 'newPlayerId')
+    assert db.getPlayerLastMatchId('newPlayerId') == False
