@@ -4,6 +4,7 @@
     Track and push after-match statistics to discord channel<br>
 </h4>
 <p align="center">
+    <img src="https://api.travis-ci.org/glmn/PUBGDiscoBot.svg?branch=master">
     <img src="https://img.shields.io/github/last-commit/glmn/PUBGDiscoBot?style=flat">
     <img src="https://img.shields.io/static/v1?label=library&message=discord.py&color=brightgreen&style=flat">
     <img src="https://img.shields.io/static/v1?label=library&message=pubg_python&color=brightgreen&style=flat">
@@ -59,5 +60,5 @@ Bot uses prefix `!pdb-` to detect mention. So every command should start from th
 </table>
 
 ### Multitrack
-<img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/multitrack.png" alt="PUBGDiscoBot" align="center">
 If multiple channel participants track same player or track different players but in same game roster, then bot will send only one message with all participants mentions.
+<img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/multitrack.png" alt="PUBGDiscoBot" align="center">
