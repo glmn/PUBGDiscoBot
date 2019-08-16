@@ -4,7 +4,7 @@
     Track and push after-match statistics to discord channel<br>
 </h4>
 <p align="center">
-    <img src="https://api.travis-ci.org/glmn/PUBGDiscoBot.svg?branch=master">
+    <a href="https://travis-ci.org/glmn/PUBGDiscoBot"><img src="https://api.travis-ci.org/glmn/PUBGDiscoBot.svg?branch=master"></a>
     <img src="https://img.shields.io/github/last-commit/glmn/PUBGDiscoBot?style=flat">
     <img src="https://img.shields.io/static/v1?label=library&message=discord.py&color=brightgreen&style=flat">
     <img src="https://img.shields.io/static/v1?label=library&message=pubg_python&color=brightgreen&style=flat">
