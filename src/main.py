@@ -28,10 +28,9 @@ async def Looper():
           db.updatePlayerLastCheck(player.id)
           match = await pubg.getMatchById(player.matches[0])
           roster = pubg.findRosterByName(player.name, match.rosters)
-          participants = roster.participants
           rank = roster.stats['rank']
           if rank <= config['bot']['rank_limit']:
-            for participant in participants:
+            for participant in roster.participants:
               if db.isPlayerExists(participant.player_id) and not db.isInAnalyzedMatches(participant.player_id, match.id):
                 db.insertAnalyzedMatch(participant.player_id, match.id)
                 authors += db.getAuthorsByPlayerId(participant.player_id)
