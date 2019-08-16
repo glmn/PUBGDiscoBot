@@ -4,8 +4,8 @@ from tinydb import TinyDB, Query, where
 
 class DBManager:
 
-  def __init__(self):
-    self.db = TinyDB(config['database']['path'])
+  def __init__(self, dbPath):
+    self.db = TinyDB(dbPath)
     self.authorsTable = self.db.table('authors')
     self.playersTable = self.db.table('players')
     self.guildsTable = self.db.table('guilds')
@@ -55,17 +55,16 @@ class DBManager:
       Author = Query()
       result = self.authorsTable.search((Author.id == author.id) & (Author.channelId == channel.id))[0]
     except IndexError:
-      result = []
+      self.insertNewAuthor(author, channel)
+      return False
 
-    if hasattr(result, 'players') and playerId in result['players']:
+    if 'players' in result and playerId in result['players']:
       return True
 
-    if(len(result) == 0):
-      self.insertNewAuthor(author, channel)
     return False
 
   def insertNewAuthor(self, author, channel):
-    self.authorsTable.insert({'name': str(author), 'id': author.id, 'guild': author.guild.id, 'channelId': channel.id, 'players': []})
+    self.authorsTable.insert({'name': author.name, 'id': author.id, 'guild': author.guild.id, 'channelId': channel.id, 'players': []})
 
   def insertPlayerToAuthor(self, author, channel, playerId):
     try:
