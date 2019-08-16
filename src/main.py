@@ -104,6 +104,10 @@ async def untrack(ctx, playerName=None):
       if len(players) > 0:
         playerId = players[0]
         playerName = db.getPlayerNameById(playerId)
+      else:
+        msg = await ctx.send('{}, your track list already empty'.format(author.mention))
+        await msg.delete(delay=config['bot']['delete_delay'])
+        return False
     else:
       msg = await ctx.send('{}, type !pdb-untrack \'player_name\''.format(author.mention))
       await msg.delete(delay=config['bot']['delete_delay'])
