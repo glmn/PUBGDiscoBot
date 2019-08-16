@@ -89,3 +89,5 @@ def test_remove_player_from_author():
     db.removePlayerFromAuthor(dataset.author, dataset.channel, dataset.player.id)
     assert len(db.getAuthorTrackedPlayers(dataset.author, dataset.channel)) == 0
     
+def test_get_player_last_match_id():
+    assert db.getPlayerLastMatchId(dataset.player.id) == dataset.match.id
