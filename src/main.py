@@ -99,9 +99,15 @@ async def untrack(ctx, playerName=None):
   await ctx.message.delete(delay=config['bot']['delete_delay'])
   
   if playerName is None: 
-    msg = await ctx.send('{}, type !pdb-untrack \'player_name\''.format(author.mention))
-    await msg.delete(delay=config['bot']['delete_delay'])
-    return False
+    if config['bot']['track_only_one']:
+      players = db.getAuthorTrackedPlayers(author, channel)
+      if len(players) > 0:
+        playerId = players[0]
+        playerName = db.getPlayerNameById(playerId)
+    else:
+      msg = await ctx.send('{}, type !pdb-untrack \'player_name\''.format(author.mention))
+      await msg.delete(delay=config['bot']['delete_delay'])
+      return False
   
   playerId = db.getPlayerIdByName(playerName)
   if playerId == -1:
