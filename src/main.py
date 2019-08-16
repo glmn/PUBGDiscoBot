@@ -9,7 +9,7 @@ from ratelimiter import RateLimiter
 from database import DBManager
 from pubg import PUBGManager
 
-db = DBManager()
+db = DBManager(config['database']['path'])
 pubg = PUBGManager()
 bot = Bot(command_prefix="!pdb-", pm_help=False)
 bot.remove_command('help')
