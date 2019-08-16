@@ -174,7 +174,6 @@ async def last(ctx, playerName=None):
 
   match = await pubg.getMatchById(matchId)
   roster = pubg.findRosterByName(playerName, match.rosters)
-  participants = roster.participants
   rank = roster.stats['rank']
   image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
   content = '{} Match: {}'.format(author.mention, match.id)
