@@ -43,6 +43,25 @@ class DBManager:
       return result['id']
     except IndexError:
       return -1
+
+  def getPlayerNameById(self, playerId):
+    try:
+      Player = Query()
+      result = self.playersTable.search(Player.id == playerId)[0]
+      return result['name']
+    except IndexError:
+      return -1
+
+  def getPlayerLastMatchId(self, playerId):
+    try:
+      Player = Query()
+      result = self.playersTable.search(Player.id == playerId)[0]['analyzedMatches']
+      if len(result) > 0:
+        matchId = result[len(result) - 1]
+        return matchId
+      return False
+    except IndexError:
+      return False
                 
   def updatePlayerLastCheck(self, playerId, delay=0):
     result = self.playersTable.update({'lastCheck': time.time() + delay}, Query().id == playerId)

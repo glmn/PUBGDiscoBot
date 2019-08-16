@@ -119,8 +119,6 @@ async def list(ctx):
   channel = ctx.message.channel
   await ctx.message.delete(delay=config['bot']['delete_delay'])
 
-  author = ctx.message.author
-  channel = ctx.message.channel
   trackedPlayers = db.getAuthorTrackedPlayers(author, channel)
   if len(trackedPlayers) == 0:
     msg = await ctx.send('{}, your track list is empty'.format(author.mention))
@@ -130,6 +128,58 @@ async def list(ctx):
   content = ','.join(db.getPlayerNamesByIds(trackedPlayers))
   msg = await ctx.send('{}, track list: {}'.format(author.mention, content))
   await msg.delete(delay=config['bot']['delete_delay'])
+
+@bot.command(pass_context=True)
+async def last(ctx, playerName=None):
+  author = ctx.message.author
+  channel = ctx.message.channel
+  await ctx.message.delete(delay=config['bot']['delete_delay'])
+  
+  if playerName is None:
+    if config['bot']['track_only_one']:
+      players = db.getAuthorTrackedPlayers(author, channel)
+      if len(players) > 0:
+        playerId = players[0]
+        playerName = db.getPlayerNameById(playerId)
+      else:
+        msg = await ctx.send('{}, your track list is empty'.format(author.mention))
+        await msg.delete(delay=config['bot']['delete_delay'])
+        return False
+    else:
+      msg = await ctx.send('{}, type !pdb-last \'player_name\''.format(author.mention))
+      await msg.delete(delay=config['bot']['delete_delay'])
+      return False
+  
+  try:
+    playerId
+  except:
+    playerId = db.getPlayerIdByName(playerName)
+  
+  if playerId == -1:
+    msg = await ctx.send('{}, {} not found'.format(author.mention, playerName))
+    await msg.delete(delay=config['bot']['delete_delay'])
+    return False
+
+  if not db.isAuthorTrackPlayer(author, channel, playerId):
+    msg = await ctx.send('{}, {} is not in your track list'.format(author.mention, playerName))
+    await msg.delete(delay=config['bot']['delete_delay'])
+    return False
+
+  matchId = db.getPlayerLastMatchId(playerId)
+  print(playerId,matchId)
+  if matchId is False:
+    msg = await ctx.send('{}, {} has no tracked matches yet'.format(author.mention, playerName))
+    await msg.delete(delay=config['bot']['delete_delay'])
+    return False
+
+  match = await pubg.getMatchById(matchId)
+  roster = pubg.findRosterByName(playerName, match.rosters)
+  participants = roster.participants
+  rank = roster.stats['rank']
+  image = renderImage(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
+  content = '{} Match: {}'.format(author.mention, match.id)
+  await channel.send(content=content, file=discord.File(image))
+  os.remove(image)
 
 try:
   bot.run(config['tokens']['discord'])
