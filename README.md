@@ -60,7 +60,7 @@ Bot uses prefix `!pdb-` to detect mention. So every command should start from th
 </table>
 
 ### Multitrack
-If multiple channel participants track same player or track different players but in same game roster, then bot will send only one message with all participants mentions.
+If multiple channel participants track same player or track different players but in same game roster, then bot will send only one message with all participants mentions. In example below, bot sent only one message instead of three, because they are all played in one roster
 <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/multitrack.png" alt="PUBGDiscoBot" align="center">
 
 
