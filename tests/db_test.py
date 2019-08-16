@@ -42,6 +42,7 @@ def test_insert_new_author():
 def test_insert_player_to_author():
     db.insertPlayerToAuthor(dataset.author, dataset.channel, dataset.player.id)
     result = db.authorsTable.search(Query().id == dataset.author.id)[0]
+    assert 'players' in result
     assert result['players'][0] == dataset.player.id
 
 def test_insert_new_player():
@@ -57,6 +58,7 @@ def test_insert_analyzed_match():
     db.insertAnalyzedMatch(dataset.player.id, dataset.match.id)
     result = db.playersTable.search(Query().id == dataset.player.id)[0]
     assert dataset.match.id in result['analyzedMatches']
+    assert 'testMatchId' not in result['analyzedMatches']
 
 def test_is_in_analyzed_matches():
     assert db.isInAnalyzedMatches(dataset.player.id, dataset.match.id)
@@ -84,6 +86,7 @@ def test_get_authors_by_player_id():
 def test_get_author_tracked_players():
     players = db.getAuthorTrackedPlayers(dataset.author, dataset.channel)
     assert dataset.player.id in players
+    assert 'testPlayerId' not in players
 
 def test_remove_player_from_author():
     db.removePlayerFromAuthor(dataset.author, dataset.channel, dataset.player.id)
