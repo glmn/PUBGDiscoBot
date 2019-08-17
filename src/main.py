@@ -27,6 +27,8 @@ async def Looper():
           authors = []
           db.updatePlayerLastCheck(player.id)
           match = await pubg.getMatchById(player.matches[0])
+          if match.map_name == 'Range_Main':
+            continue
           roster = pubg.findRosterByName(player.name, match.rosters)
           rank = roster.stats['rank']
           if rank <= config['bot']['rank_limit']:
