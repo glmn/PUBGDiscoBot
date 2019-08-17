@@ -63,6 +63,10 @@ Bot uses prefix `!pdb-` to detect mention. So every command should start from th
 If multiple channel participants track same player or track different players but in same game roster, then bot will send only one message with all participants mentions. In example below, bot sent only one message instead of three, because they are all played in one roster
 <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/multitrack.png" alt="PUBGDiscoBot" align="center">
 
+### Want to test?
+Join special <a href="https://discord.gg/p6TGxqB">discord channel</a> and make your first track.
+If your last game was TOP-3 then bot will show you stats immediately, otherwise you need to play PUBG to achive at least TOP-3 rank. 
 
 #### Patrons
 Thanks to all the backers and sponsors! Support this project by <a href="https://www.patreon.com/glmn">becoming a patron</a>.
+
