@@ -5,7 +5,7 @@ sys.path.insert(0, 'src')
 sys.path.insert(0, '../src')
 
 from tinydb import TinyDB, Query, where
-from database import DBManager
+from database import db_manager
 from config import config
 
 class Object:
@@ -28,93 +28,91 @@ dataset = dict2obj({
     'author':{'id': 999111, 'name': 'testName', 'guild': {'id': 12345}},
     'channel': {'id': 512399912},
     'player': {'id': 'account.012300031ds010120a0sd0', 'name': 'testName'},
-    'match': {'id': '6fea3291-83aa-4c46-b31b-f40c59ec6d16'}
+    'match': {'id': '6fea3291-83aa-4c46-b31b-f40c59ec6d16'},
+    'wrong': {
+        'author': {'id': 999, 'name': 'wrong', 'guild': {'id': 999}},
+        'channel': {'id': 999},
+        'player': {'id': 'wrong', 'name': 'wrong'},
+        'match': {'id': 'wrong'}
+    }
 })
 
 
 open('testdb.json', 'w').close()
-db = DBManager('testdb.json')
+db = db_manager('testdb.json')
 
 def test_insert_new_author():
-    db.insertNewAuthor(dataset.author, dataset.channel)
-    result = db.authorsTable.search(Query().id == 999111)
+    db.insert_new_author(dataset.author, dataset.channel)
+    result = db.authors_table.search(Query().id == 999111)
     assert len(result) == 1
 
 def test_insert_player_to_author():
-    db.insertPlayerToAuthor(dataset.author, dataset.channel, dataset.player.id)
-    result = db.authorsTable.search(Query().id == dataset.author.id)[0]
+    db.insert_player_to_author(dataset.author, dataset.channel, dataset.player.id)
+    result = db.authors_table.search(Query().id == dataset.author.id)[0]
     assert 'players' in result
     assert result['players'][0] == dataset.player.id
-    wrongChannel = copy.deepcopy(dataset.channel)
-    wrongChannel.id = '213231321'
-    assert db.insertPlayerToAuthor(dataset.author, wrongChannel, dataset.player.id) == False
+    assert db.insert_player_to_author(dataset.author, dataset.wrong.channel, dataset.player.id) == False
 
 def test_insert_new_player():
-    db.insertNewPlayer(dataset.player.name, dataset.player.id)
-    result = db.playersTable.search(Query().id == dataset.player.id)
+    db.insert_new_player(dataset.player.name, dataset.player.id)
+    result = db.players_table.search(Query().id == dataset.player.id)
     assert len(result) == 1
 
 def test_is_player_exists():
-    assert db.isPlayerExists(dataset.player.id)
-    assert not db.isPlayerExists('wrongPlayerId')
+    assert db.is_player_exists(dataset.player.id)
+    assert not db.is_player_exists('wrongPlayerId')
 
 def test_insert_analyzed_match():
-    db.insertAnalyzedMatch(dataset.player.id, dataset.match.id)
-    result = db.playersTable.search(Query().id == dataset.player.id)[0]
+    db.insert_analyzed_match(dataset.player.id, dataset.match.id)
+    result = db.players_table.search(Query().id == dataset.player.id)[0]
     assert dataset.match.id in result['analyzedMatches']
     assert 'testMatchId' not in result['analyzedMatches']
 
 def test_is_in_analyzed_matches():
-    assert db.isInAnalyzedMatches(dataset.player.id, dataset.match.id)
+    assert db.is_in_analyzed_matches(dataset.player.id, dataset.match.id)
 
 def test_get_player_ids():
-    assert db.getPlayerIds()[0] == dataset.player.id
+    assert db.get_player_ids()[0] == dataset.player.id
 
 def test_get_player_names_by_ids():
-    assert db.getPlayerNamesByIds([dataset.player.id])[0] == dataset.player.name
+    assert db.get_player_names_by_ids([dataset.player.id])[0] == dataset.player.name
 
 def test_get_player_id_by_name():
-    assert db.getPlayerIdByName(dataset.player.name) == dataset.player.id
-    assert db.getPlayerIdByName('wrongPlayerName') == -1
+    assert db.get_player_id_by_name(dataset.player.name) == dataset.player.id
+    assert db.get_player_id_by_name(dataset.wrong.player.name) == -1
 
 def test_get_player_name_by_id():
-    assert db.getPlayerNameById(dataset.player.id) == dataset.player.name
-    assert db.getPlayerNameById('wrongPlayerId') == -1
+    assert db.get_player_name_by_id(dataset.player.id) == dataset.player.name
+    assert db.get_player_name_by_id(dataset.wrong.player.id) == -1
 
 def test_update_player_last_cheack():
-    db.updatePlayerLastCheck(dataset.player.id)
-    assert len(db.playersTable.search(Query().lastCheck > 0)) == 1
+    db.update_player_last_check(dataset.player.id)
+    assert len(db.players_table.search(Query().lastCheck > 0)) == 1
 
 def test_is_author_track_player():
-    assert db.isAuthorTrackPlayer(dataset.author, dataset.channel, dataset.player.id)
-    assert db.isAuthorTrackPlayer(dataset.author, dataset.channel, 'wrongPlayerId') == False
-    wrongChannel = copy.deepcopy(dataset.channel)
-    wrongChannel.id = '4124421412'
-    assert db.isAuthorTrackPlayer(dataset.author, wrongChannel, 'wrongPlayerId') == False
+    assert db.is_author_track_player(dataset.author, dataset.channel, dataset.player.id)
+    assert db.is_author_track_player(dataset.author, dataset.channel, dataset.wrong.player.id) == False
+    assert db.is_author_track_player(dataset.author, dataset.wrong.channel, dataset.wrong.player.id) == False
 
 def test_get_authors_by_player_id():
-    authors = db.getAuthorsByPlayerId(dataset.player.id)
+    authors = db.get_authors_by_player_id(dataset.player.id)
     assert len(authors) == 1
 
 def test_get_author_tracked_players():
-    players = db.getAuthorTrackedPlayers(dataset.author, dataset.channel)
+    players = db.get_author_tracked_players(dataset.author, dataset.channel)
     assert dataset.player.id in players
     assert 'testPlayerId' not in players
-    wrongChannel = copy.deepcopy(dataset.channel)
-    wrongChannel.id = '521521231'
-    result = db.getAuthorTrackedPlayers(dataset.author, wrongChannel)
+    result = db.get_author_tracked_players(dataset.author, dataset.wrong.channel)
     assert len(result) == 0
 
 def test_remove_player_from_author():
-    db.removePlayerFromAuthor(dataset.author, dataset.channel, dataset.player.id)
-    assert len(db.getAuthorTrackedPlayers(dataset.author, dataset.channel)) == 0
-    wrongChannel = copy.deepcopy(dataset.channel)
-    wrongChannel.id = '66123321321'
-    assert db.removePlayerFromAuthor(dataset.author, wrongChannel, dataset.player.id) == False
-    assert db.removePlayerFromAuthor(dataset.author, dataset.channel, 'wrongPlayerId') == False
+    db.remove_player_from_author(dataset.author, dataset.channel, dataset.player.id)
+    assert len(db.get_author_tracked_players(dataset.author, dataset.channel)) == 0
+    assert db.remove_player_from_author(dataset.author, dataset.wrong.channel, dataset.player.id) == False
+    assert db.remove_player_from_author(dataset.author, dataset.channel, dataset.wrong.player.id) == False
 
 def test_get_player_last_match_id():
-    assert db.getPlayerLastMatchId(dataset.player.id) == dataset.match.id
-    assert db.getPlayerLastMatchId('wrongPlayerId') == False
-    db.insertNewPlayer('newPlayerName', 'newPlayerId')
-    assert db.getPlayerLastMatchId('newPlayerId') == False
+    assert db.get_player_last_match_id(dataset.player.id) == dataset.match.id
+    assert db.get_player_last_match_id(dataset.wrong.player.id) == False
+    db.insert_new_player('newPlayerName', 'newPlayerId')
+    assert db.get_player_last_match_id('newPlayerId') == False

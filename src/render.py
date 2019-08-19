@@ -1,18 +1,18 @@
 import time
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-def renderImage(mapName, mode, position, teammates, rostersCount):
+def render_stats(map_name, mode, position, teammates, rosters_count):
   
-  if(mapName == 'Desert_Main'):
-    mapName = 'Miramar_Main'
+  if(map_name == 'Desert_Main'):
+    map_name = 'Miramar_Main'
 
-  image = Image.open('img/{}.png'.format(mapName))
+  image = Image.open('img/{}.png'.format(map_name))
   userIcon = Image.open('img/user.png', mode='r')
   draw = ImageDraw.Draw(image)
 
-  mapName = mapName[:-5]
-  if(mapName == 'Savage'):
-    mapName = 'Sanhok'
+  map_name = map_name[:-5]
+  if(map_name == 'Savage'):
+    map_name = 'Sanhok'
 
   #Count user icons
   iconsCount = 4 if 'squad' in mode else len(teammates)
@@ -65,6 +65,6 @@ def renderImage(mapName, mode, position, teammates, rostersCount):
   area = (0, 0, 615, margin + 24)
   image = image.crop(area)
 
-  imageName = '{}-{}-{}.png'.format(time.time(), mapName, position)
+  imageName = '{}-{}-{}.png'.format(time.time(), map_name, position)
   image.save(imageName)
   return imageName
