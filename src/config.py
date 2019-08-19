@@ -1,23 +1,18 @@
 config = {
   'bot': {
     'rank_limit': 100,
-    'track_only_one': True,
-    'delete_delay': 10
+    'track_only_one': True
   },
   'delay': {
     'simple': 600.0,
-    'no_matches': 1200.0
+    'no_matches': 1200.0,
+    'delete': 10
   },
   'tokens': {
-    'discord': 'YOUR TOKEN',
-    'pubg': 'YOUR TOKEN'
+    'discord': 'TOKEN',
+    'pubg': 'TOKEN'
   },
   'database': {
     'path': 'db.json'
-  },
-  'discord': {
-    'activity': {
-      'name': 'БДСМ (ЖЕСТКААА!)'
-    }
   }
 }
