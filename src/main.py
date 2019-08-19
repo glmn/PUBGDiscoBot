@@ -17,7 +17,7 @@ bot.remove_command('help')
 
 async def sendAndDeleteMessage(ctx, message=None):
   if message:
-    await sendAndDeleteMessage(ctx, message)
+    msg = await ctx.send(message)
   else:
     msg = ctx.message
   await msg.delete(delay = config['delay']['delete'])
