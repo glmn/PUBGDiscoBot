@@ -70,8 +70,6 @@ async def Looper():
 
 @bot.event
 async def on_ready():
-  activity = discord.Game(name=config['discord']['activity']['name'])
-  await bot.change_presence(activity=activity)
   bot.loop.create_task(Looper())
 
 
