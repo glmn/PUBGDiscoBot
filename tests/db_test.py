@@ -59,8 +59,8 @@ def test_insert_new_player():
     assert len(result) == 1
 
 def test_is_player_exists():
-    assert db.is_player_exists(dataset.player.id)
-    assert not db.is_player_exists('wrongPlayerId')
+    assert db.player_exists(dataset.player.id)
+    assert not db.player_exists('wrongPlayerId')
 
 def test_insert_analyzed_match():
     db.insert_analyzed_match(dataset.player.id, dataset.match.id)
@@ -86,7 +86,7 @@ def test_get_player_name_by_id():
     assert db.get_player_name_by_id(dataset.wrong.player.id) == -1
 
 def test_update_player_last_cheack():
-    db.update_player_last_check(dataset.player.id)
+    db.update_player_lastcheck(dataset.player.id)
     assert len(db.players_table.search(Query().lastCheck > 0)) == 1
 
 def test_is_author_track_player():
