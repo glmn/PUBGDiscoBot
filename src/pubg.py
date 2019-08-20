@@ -9,19 +9,19 @@ class pubg_manager:
     self.rate_limiter = rate_limiter(10.0, 60.0)
     self.api = PUBG(config['tokens']['pubg'], Shard.STEAM)
 
-  async def getPlayersData(self, player_ids):
+  async def get_players_data(self, player_ids):
     players_chunks = list(self.chunk(player_ids, 10))
     for players_chunk in players_chunks:
       try:
-        return await self.get_players_by_ids(players_chunk)
+        return await self.get_players(players_chunk)
       except Exception as e:
         print(e)
 
-  async def get_players_by_ids(self, player_ids):
+  async def get_players(self, player_ids):
     await self.rate_limiter.wait()
     return self.api.players().filter(player_ids=player_ids)
 
-  async def get_match_by_id(self, match_id):
+  async def get_match(self, match_id):
     return self.api.matches().get(match_id)
 
   async def get_player_id_by_name(self, player_name):

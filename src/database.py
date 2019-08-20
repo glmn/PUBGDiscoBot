@@ -11,7 +11,7 @@ class db_manager:
     self.guilds_table = self.db.table('guilds')
 
   # players
-  def is_player_exists(self, player_id):
+  def player_exists(self, player_id):
     return len(self.players_table.search(Query().id == player_id)) > 0
 
   def is_in_analyzed_matches(self, player_id, match_id):
@@ -62,7 +62,7 @@ class db_manager:
     except IndexError:
       return False
                 
-  def update_player_last_check(self, player_id, delay=0):
+  def update_player_lastcheck(self, player_id, delay=0):
     result = self.players_table.update({'lastCheck': time.time() + delay}, Query().id == player_id)
     return result
 

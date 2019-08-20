@@ -16,13 +16,10 @@ bot = Bot(command_prefix="!pdb-", pm_help=False)
 bot.remove_command('help')
 
 async def send_destruct_message(ctx, message=None):
-  if message:
-    msg = await ctx.send(message)
-  else:
-    msg = ctx.message
+  msg = await ctx.send(message) if message else ctx.message
   await msg.delete(delay = config['delay']['delete'])
 
-def generate_match_embed(authors, match_id, image, command=None):
+def match_embed(authors, match_id, image, command=None):
   if command == 'last':
     mention = authors.mention
   elif command == None:
@@ -30,19 +27,20 @@ def generate_match_embed(authors, match_id, image, command=None):
   
   embed = discord.Embed(colour=discord.Colour(0x50e3c2), description=mention)
   embed.set_image(url="attachment://{}".format(image))
-  embed.set_footer(text="Match ID: {}".format(match_id), icon_url="attachment://footer.png")
+  embed.set_footer(text="Match ID: {}".format(match_id),
+                   icon_url="attachment://footer.png")
   return embed
 
 async def main_loop():
 
-  def _split_authors_by_channel(authors):
-    authors_by_channel = {}
+  def _split_authors(authors):
+    authors_channels = {}
     for author in authors:
       channel_id = author['channelId']
-      if not channel_id in authors_by_channel:
-        authors_by_channel[channel_id] = []
-      authors_by_channel[channel_id].append(author)
-    return authors_by_channel.items()
+      if not channel_id in authors_channels:
+        authors_channels[channel_id] = []
+      authors_channels[channel_id].append(author)
+    return authors_channels.items()
 
   while True:
     await bot.wait_until_ready()
@@ -52,17 +50,19 @@ async def main_loop():
     if not player_ids:
       continue
 
-    players_data = await pubg.getPlayersData(player_ids)
-    players_wo_matches = [player for player in players_data if not hasattr(player, 'matches')]
-    players_w_matches = [player for player in players_data if hasattr(player, 'matches')]
+    players_data = await pubg.get_players_data(player_ids)
+    players_wo_matches = [player for player in players_data
+                          if not hasattr(player, 'matches')]
+    players_w_matches = [player for player in players_data
+                         if hasattr(player, 'matches')]
     
     for player in players_wo_matches:
-      db.update_player_last_check(player.id, config['delay']['no_matches'])
+      db.update_player_lastcheck(player.id, config['delay']['no_matches'])
 
     for player in players_w_matches:
       authors = []
-      db.update_player_last_check(player.id)
-      match = await pubg.get_match_by_id(player.matches[0])
+      db.update_player_lastcheck(player.id)
+      match = await pubg.get_match(player.matches[0])
       if match.map_name == 'Range_Main':
         continue
       roster = pubg.find_roster_by_name(player.name, match.rosters)
@@ -70,20 +70,24 @@ async def main_loop():
       if rank > config['bot']['rank_limit']:
         continue  
       for participant in roster.participants:
-        if db.is_player_exists(participant.player_id) and not db.is_in_analyzed_matches(participant.player_id, match.id):
+        if db.player_exists(participant.player_id) and not db.is_in_analyzed_matches(participant.player_id, match.id):
           db.insert_analyzed_match(participant.player_id, match.id)
           authors += db.get_authors_by_player_id(participant.player_id)
 
       if len(authors) == 0:
         continue
 
-      image = render_stats(match.map_name, match.game_mode, rank, roster.participants, len(match.rosters))
+      image = render_stats(match.map_name, match.game_mode, rank,
+                           roster.participants, len(match.rosters))
 
-      for channel_id, authors in _split_authors_by_channel(authors):
+      for channel_id, authors in _split_authors(authors):
         channel = bot.get_channel(channel_id)
-        embed = generate_match_embed(authors, match.id, image)
-        print('sending')
-        await channel.send(content="\u200b", files=[discord.File(image), discord.File('./img/footer.png')], embed=embed)
+        embed = match_embed(authors, match.id, image)
+        
+        image_stats = discord.File(image)
+        image_footer = discord.File('./img/footer.png')
+        await channel.send(content="\u200b", embed=embed,
+                           files=[image_stats, image_footer])
       os.remove(image)
 
 @bot.event
@@ -217,10 +221,10 @@ async def last(ctx, player_name=None):
     await send_destruct_message(ctx, '{}, {} has no tracked matches yet'.format(author.mention, player_name))
     return False
 
-  match = await pubg.get_match_by_id(match_id)
+  match = await pubg.get_match(match_id)
   roster = pubg.find_roster_by_name(player_name, match.rosters)
   image = render_stats(match.map_name, match.game_mode, roster.stats['rank'], roster.participants, len(match.rosters))
-  embed = generate_match_embed(author, match.id, image, 'last')
+  embed = match_embed(author, match.id, image, 'last')
   await channel.send(content='\u200b', embed=embed, files=[discord.File(image), discord.File('./img/footer.png')])
   os.remove(image)
 
