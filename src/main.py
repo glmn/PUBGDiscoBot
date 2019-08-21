@@ -12,7 +12,7 @@ from pubg import pubg_manager
 
 db = db_manager(config['database']['path'])
 pubg = pubg_manager()
-bot = Bot(command_prefix="!pdb-", pm_help=False)
+bot = Bot(command_prefix=config['bot']['prefix'], pm_help=False)
 bot.remove_command('help')
 
 
@@ -240,6 +240,49 @@ async def last(ctx, player_name=None):
     embed = match_embed(author, match.id, image, 'last')
     await channel.send(content='\u200b', embed=embed, files=[discord.File(image), discord.File('./img/footer.png')])
     os.remove(image)
+
+@bot.command(pass_context=True, guild_only=True)
+@commands.guild_only()
+async def help(ctx):
+    await ctx.message.delete(delay=config['delay']['delete'])
+    pre = config['bot']['prefix']
+    commands = [
+        pre + 'track',
+        pre + 'untrack',
+        pre + 'list',
+        pre + 'last',
+        pre + 'help']
+
+    attributes = [
+        'player_name',
+        'player_name',
+        '\u200b',
+        '\u200b',
+        '\u200b'
+    ]
+
+    descriptions = [
+        '_Add player to track list_',
+        '_Remove player from track list_',
+        '_Show players from track list_',
+        '_Show last match_',
+        '_Show this help message_']
+
+    commands_str = '\n'.join(commands)
+    descriptions_str = '\n'.join(descriptions)
+    attributes_str = '\n'.join(attributes)
+
+    title = "About PUBGDiscoBot"
+    description = """PUBGDiscoBot made with :hearts: by <@132402729887727616>
+                     This is an open-source project. You can find it on [GitHub](https://github.com/glmn/PUBGDiscoBot)"""
+
+    embed = discord.Embed(colour=discord.Colour(0x50e3c2),
+                          title=title,
+                          description=description)
+    embed.add_field(name="**Commands**", value=commands_str, inline=True)
+    embed.add_field(name="**Attributes**", value=attributes_str, inline=True)
+    embed.add_field(name="**Description**", value=descriptions_str, inline=True)
+    await ctx.send(content='\u200b', embed=embed)
 
 try:
     bot.run(config['tokens']['discord'])
