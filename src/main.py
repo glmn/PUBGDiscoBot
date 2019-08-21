@@ -256,9 +256,9 @@ async def help(ctx):
     attributes = [
         'player_name',
         'player_name',
-        '',
-        '',
-        ''
+        '\u200b',
+        '\u200b',
+        '\u200b'
     ]
 
     descriptions = [
@@ -273,7 +273,7 @@ async def help(ctx):
     attributes_str = '\n'.join(attributes)
 
     title = "About PUBGDiscoBot"
-    description = """PUBGDiscoBot created with :hearts: by <@132402729887727616>
+    description = """PUBGDiscoBot made with :hearts: by <@132402729887727616>
                      This is an open-source project. You can find it on [GitHub](https://github.com/glmn/PUBGDiscoBot)"""
 
     embed = discord.Embed(colour=discord.Colour(0x50e3c2),
