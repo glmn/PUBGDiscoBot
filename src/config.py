@@ -1,5 +1,6 @@
 config = {
   'bot': {
+    'prefix': '!pdb-',
     'rank_limit': 100,
     'track_only_one': True
   },
