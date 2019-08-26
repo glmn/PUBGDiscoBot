@@ -1,11 +1,7 @@
 <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/preview.gif" alt="PUBGDiscoBot" align="center">
 <h6 align="center">KILLS | ASSISTS | DAMAGE | LONGEST KILL</h3>
 <a href="https://discordapp.com/api/oauth2/authorize?client_id=485214088763539466&permissions=67631168&scope=bot">
-<<<<<<< HEAD
   <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/invite.png" alt="PUBGDiscoBot" align="center">
-=======
-  <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/invite.gif" alt="PUBGDiscoBot" align="center">
->>>>>>> 7c397e8a4d0389e17da0e4f08f20d2b50f571342
 </a>
 <h4 align="center">
     Track and push after-match statistics to discord channel<br>
