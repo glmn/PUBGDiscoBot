@@ -134,3 +134,11 @@ class db_manager:
             self.authors_table.write_back([result])
             return True
         return False
+
+    def get_guild_by_channel_id(self, channel_id):
+        try:
+            Author = Query()
+            result = self.authors_table.search(Author.channelId == channel_id)[0]
+            return result['guild']
+        except IndexError:
+            return False

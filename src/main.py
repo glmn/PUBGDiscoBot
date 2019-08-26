@@ -90,11 +90,16 @@ async def main_loop():
                                  roster.participants, len(match.rosters))
 
             for channel_id, authors in _split_authors(authors):
+                guild_id = db.get_guild_by_channel_id(channel_id)
+                if not guild_id in [x.id for x in bot.guilds]:
+                    continue
                 channel = bot.get_channel(channel_id)
                 embed = match_embed(authors, match.id, image)
 
                 image_stats = discord.File(image)
                 image_footer = discord.File('./img/footer.png')
+                
+                print(authors, channel_id, channel, embed)
                 await channel.send(content="\u200b", embed=embed,
                                    files=[image_stats, image_footer])
             os.remove(image)
@@ -103,6 +108,8 @@ async def main_loop():
 @bot.event
 async def on_ready():
     bot.loop.create_task(main_loop())
+    for guild in bot.guilds:
+        print(guild.id, guild.name)
 
 
 @bot.command(pass_context=True, guild_only=True)
