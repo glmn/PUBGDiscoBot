@@ -1,20 +1,30 @@
 import os
+import sys
 import time
 import discord
 import asyncio
-from discord.ext import commands
-from discord.ext.commands import Bot
-from render import render_stats
 from config import config
-from ratelimiter import rate_limiter
-from database import db_manager
+from loguru import logger
 from pubg import pubg_manager
+from database import db_manager
+from render import render_stats
+from discord.ext import commands
+from ratelimiter import rate_limiter
+from discord.ext.commands import Bot
 
 db = db_manager(config['database']['path'])
 pubg = pubg_manager()
 bot = Bot(command_prefix=config['bot']['prefix'], pm_help=False)
 bot.remove_command('help')
 
+logger.level("ERROR", no=38, color="<red><bold>", icon="❌")
+logger.level("MSG", no=38, color="<yellow><underline>", icon="📝")
+logger.add("logs/errors.log", colorize=True, rotation="10 MB", filter=lambda record: record["level"].name == "ERROR")
+logger.add("logs/debug.log", colorize=True, rotation="10 MB", filter=lambda record: record["level"].name == "DEBUG")
+logger.add("logs/messages.log", 
+    filter=lambda record: record["level"].name == "MSG",
+    format="({time:DD.MM.YYYY HH:mm:ss}) {message}", 
+    rotation="10 MB")
 
 async def send_destruct_message(ctx, message=None):
     msg = await ctx.send(message) if message else ctx.message
@@ -32,7 +42,6 @@ def match_embed(authors, match_id, image, command=None):
     embed.set_footer(text="Match ID: {}".format(match_id),
                      icon_url="attachment://footer.png")
     return embed
-
 
 async def main_loop():
 
@@ -110,7 +119,19 @@ async def on_ready():
     bot.loop.create_task(main_loop())
     for guild in bot.guilds:
         print(guild.id, guild.name)
-
+@bot.event
+async def on_message(message):
+    if message.content.startswith('!pdb-'):
+        logger.log('MSG',
+            '[{}||{}] #{}||{} @{}||{} > {}', 
+            message.guild.name,
+            message.guild.id,
+            message.channel.name,
+            message.channel.id,
+            message.author.name,
+            message.author.id,
+            message.content)
+    await bot.process_commands(message)
 
 @bot.command(pass_context=True, guild_only=True)
 @commands.guild_only()
