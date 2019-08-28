@@ -7,3 +7,4 @@ htmlcov
 src/logs/messages.log
 src/logs/errors.log
 src/logs/debug.log
+src/logs/infos.log
