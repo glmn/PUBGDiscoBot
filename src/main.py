@@ -17,10 +17,15 @@ pubg = pubg_manager()
 bot = Bot(command_prefix=config['bot']['prefix'], pm_help=False)
 bot.remove_command('help')
 
-logger.level("ERROR", no=38, color="<red><bold>", icon="❌")
-logger.level("MSG", no=38, color="<yellow><underline>", icon="📝")
-logger.add("logs/errors.log", colorize=True, rotation="10 MB", filter=lambda record: record["level"].name == "ERROR")
-logger.add("logs/debug.log", colorize=True, rotation="10 MB", filter=lambda record: record["level"].name == "DEBUG")
+logger.level("INFO", no=20, color="<yellow><bold>", icon="📄")
+logger.level("DEBUG", no=10, color="<blue><bold>", icon="🐛")
+logger.level("MSG", no=20, color="<yellow><underline>", icon="📝")
+logger.add("logs/infos.log",
+    filter=lambda record: record["level"].name == "INFO",
+    rotation="10 MB")
+logger.add("logs/debug.log",
+    filter=lambda record: record["level"].name == "DEBUG",
+    rotation="10 MB")
 logger.add("logs/messages.log", 
     filter=lambda record: record["level"].name == "MSG",
     format="({time:DD.MM.YYYY HH:mm:ss}) {message}", 
@@ -107,8 +112,13 @@ async def main_loop():
 
                 image_stats = discord.File(image)
                 image_footer = discord.File('./img/footer.png')
-                
-                print(authors, channel_id, channel, embed)
+                logger.log('DEBUG',
+                    '[{}||{}] #{}||{} [{}]',
+                    channel.guild.name,
+                    channel.guild.id,
+                    channel.name,
+                    channel.id,
+                    authors)
                 await channel.send(content="\u200b", embed=embed,
                                    files=[image_stats, image_footer])
             os.remove(image)
@@ -119,6 +129,16 @@ async def on_ready():
     bot.loop.create_task(main_loop())
     for guild in bot.guilds:
         print(guild.id, guild.name)
+
+@bot.event
+async def on_guild_join(guild):
+    logger.log(
+        'INFO',
+        '[{}||{}] INVITED TO NEW GUILD', 
+        guild.name,
+        guild.id)
+
+
 @bot.event
 async def on_message(message):
     if message.content.startswith('!pdb-'):
@@ -266,6 +286,13 @@ async def last(ctx, player_name=None):
     image = render_stats(match.map_name, match.game_mode,
                          roster.stats['rank'], roster.participants, len(match.rosters))
     embed = match_embed(author, match.id, image, 'last')
+    logger.log('DEBUG',
+        '[{}||{}] #{}||{} @{}',
+        ctx.message.guild.name,
+        ctx.message.guild.id,
+        ctx.message.channel.name,
+        ctx.message.channel.id,
+        author)
     await channel.send(content='\u200b', embed=embed, files=[discord.File(image), discord.File('./img/footer.png')])
     os.remove(image)
 
