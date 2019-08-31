@@ -22,13 +22,16 @@ logger.level("DEBUG", no=10, color="<blue><bold>", icon="🐛")
 logger.level("MSG", no=20, color="<yellow><underline>", icon="📝")
 logger.add("logs/infos.log",
     filter=lambda record: record["level"].name == "INFO",
+    encoding="utf-8",
     rotation="10 MB")
 logger.add("logs/debug.log",
     filter=lambda record: record["level"].name == "DEBUG",
+    encoding="utf-8",
     rotation="10 MB")
 logger.add("logs/messages.log", 
     filter=lambda record: record["level"].name == "MSG",
     format="({time:DD.MM.YYYY HH:mm:ss}) {message}", 
+    encoding="utf-8",
     rotation="10 MB")
 
 async def send_destruct_message(ctx, message=None):
