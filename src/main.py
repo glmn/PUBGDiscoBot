@@ -82,7 +82,7 @@ async def main_loop():
             authors = []
             db.update_player_lastcheck(player.id)
             match = await pubg.get_match(player.matches[0])
-            if match.map_name == 'Range_Main':
+            if match.map_name == 'Range_Main' or match.is_custom_match is True:
                 continue
             roster = pubg.find_roster_by_name(player.name, match.rosters)
             rank = roster.stats['rank']
