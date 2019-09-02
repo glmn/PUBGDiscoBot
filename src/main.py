@@ -1,5 +1,4 @@
 import os
-import sys
 import time
 import discord
 import asyncio
@@ -9,7 +8,6 @@ from pubg import pubg_manager
 from database import db_manager
 from render import render_stats
 from discord.ext import commands
-from ratelimiter import rate_limiter
 from discord.ext.commands import Bot
 
 db = db_manager(config['database']['path'])
@@ -28,9 +26,9 @@ logger.add("logs/debug.log",
     filter=lambda record: record["level"].name == "DEBUG",
     encoding="utf-8",
     rotation="10 MB")
-logger.add("logs/messages.log", 
+logger.add("logs/messages.log",
     filter=lambda record: record["level"].name == "MSG",
-    format="({time:DD.MM.YYYY HH:mm:ss}) {message}", 
+    format="({time:DD.MM.YYYY HH:mm:ss}) {message}",
     encoding="utf-8",
     rotation="10 MB")
 
@@ -137,14 +135,14 @@ async def on_ready():
 async def on_guild_join(guild):
     logger.log(
         'INFO',
-        '[{}||{}] INVITED TO NEW GUILD', 
+        '[{}||{}] INVITED TO NEW GUILD',
         guild.name,
         guild.id)
 
 
 @bot.event
 async def on_message(message):
-    if message.content.startswith('!pdb-'):
+    if message.content.startswith(config['bot']['prefix']):
         logger.log('MSG',
             '[{}||{}] #{}||{} @{}||{} > {}', 
             message.guild.name,
