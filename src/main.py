@@ -174,7 +174,7 @@ async def track(ctx, player_name=None):
         return player_id
 
     if player_name is None:
-        await send_destruct_message(ctx, '{}, type !pdb-track \'player_name\''.format(author.mention))
+        await send_destruct_message(ctx, '{}, type pubg track \'player_name\''.format(author.mention))
         return False
 
     if config['bot']['track_only_one'] and len(db.get_author_tracked_players(author, channel)) > 0:
@@ -209,7 +209,7 @@ async def untrack(ctx, player_name=None):
         player_id = db.get_player_id_by_name(player_name)
     else:
         if not config['bot']['track_only_one']:
-            await send_destruct_message(ctx, '{}, type !pdb-untrack \'player_name\''.format(author.mention))
+            await send_destruct_message(ctx, '{}, type pubg untrack \'player_name\''.format(author.mention))
             return False
         try:
             player_id = db.get_author_tracked_players(author, channel)[0]
@@ -255,7 +255,7 @@ async def last(ctx, player_name=None):
 
     if player_name is None:
         if not config['bot']['track_only_one']:
-            await send_destruct_message(ctx, '{}, type !pdb-last \'player_name\''.format(author.mention))
+            await send_destruct_message(ctx, '{}, type pubg last \'player_name\''.format(author.mention))
             return False
         players = db.get_author_tracked_players(author, channel)
         if not players:

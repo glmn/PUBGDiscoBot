@@ -1,6 +1,6 @@
 config = {
   'bot': {
-    'prefix': '!pdb-',
+    'prefix': 'pubg ',
     'rank_limit': 100,
     'track_only_one': True
   },

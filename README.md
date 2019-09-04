@@ -27,14 +27,14 @@ Bot that notify all your friends in discord channel about your last game where y
 <hr>
 
 ### Bot commands
-Bot uses prefix `!pdb-` to detect mention. So every command should start from this prefix plus command from the list down below.
+Bot uses prefix `pubg ` to detect mention. So every command should start from this prefix plus command from the list down below (ex. 'pubg track shroud').
 
 <table>
   <tr>
   <th class="tg-0pky">command</th>
   <th class="tg-0pky">argument</th>
   <th class="tg-0pky">description</th>
-  <th class="tg-0lax" rowspan="5"><img width="370" alt="PUBGDiscoBot" src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/commands.png" ></th>
+  <th class="tg-0lax" rowspan="5"><img width="370" alt="PUBGDiscoBot" src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/help.png" ></th>
   </tr>
   <tr>
   <td class="tg-0pky"><code>track</code></td>
