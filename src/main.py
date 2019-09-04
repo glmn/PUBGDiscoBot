@@ -129,15 +129,16 @@ async def main_loop():
 async def on_ready():
     bot.loop.create_task(main_loop())
     for guild in bot.guilds:
-        print(guild.id, guild.name)
+        print(guild.id, guild.name, guild.member_count)
 
 @bot.event
 async def on_guild_join(guild):
     logger.log(
         'INFO',
-        '[{}||{}] INVITED TO NEW GUILD',
+        'NEW GUILD [{}||{}] > #{}',
         guild.name,
-        guild.id)
+        guild.id,
+        guild.member_count)
 
 
 @bot.event
@@ -193,7 +194,7 @@ async def track(ctx, player_name=None):
         await send_destruct_message(ctx, '{}, something wrong with inserting player {}.'.format(author.mention, player_name))
         return False
 
-    await send_destruct_message(ctx, '{}, player {} added to your track list '.format(author.mention, player_name))
+    await ctx.send('{}, player {} added to your track list '.format(author.mention, player_name))
     return True
 
 
