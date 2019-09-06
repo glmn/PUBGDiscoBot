@@ -1,7 +1,7 @@
 config = {
   'bot': {
     'prefix': 'pubg ',
-    'rank_limit': 100,
+    'rank_limit': 3,
     'track_only_one': True
   },
   'delay': {
@@ -10,8 +10,8 @@ config = {
     'delete': 10
   },
   'tokens': {
-    'discord': 'TOKEN',
-    'pubg': 'TOKEN'
+    'discord': 'YOUR TOKEN',
+    'pubg': 'YOUR TOKEN'
   },
   'database': {
     'path': 'db.json'
