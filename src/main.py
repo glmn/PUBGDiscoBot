@@ -129,7 +129,7 @@ async def main_loop():
 async def on_ready():
     bot.loop.create_task(main_loop())
     for guild in bot.guilds:
-        print(guild.id, guild.name, guild.member_count)
+        print(guild.id, guild.name, len(guild.members))
 
 @bot.event
 async def on_guild_join(guild):
