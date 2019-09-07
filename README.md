@@ -1,5 +1,5 @@
 <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/preview.gif" alt="PUBGDiscoBot" align="center">
-<h6 align="center">KILLS | ASSISTS | DAMAGE | LONGEST KILL</h3>
+<h6 align="center">DAMAGE | KILLS | ASSISTS | REVIVES | LONGEST KILL | HS | DISTANCE</h3>
 
 <h4 align="center">
     Track and push after-match statistics to discord channel<br>
