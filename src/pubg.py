@@ -11,7 +11,7 @@ class pubg_manager:
         self.api = PUBG(config['tokens']['pubg'], Shard.STEAM)
 
     async def wait_ratelimit(self, reset):
-        sleep_seconds = (reset - datetime.now()).total_seconds()
+        sleep_seconds = (reset - datetime.now()).total_seconds() + 1 # 1 sec insurance
         print(sleep_seconds)
         if sleep_seconds > 0:
             return await asyncio.sleep(sleep_seconds)
@@ -20,11 +20,14 @@ class pubg_manager:
 
     async def get_players_data(self, player_ids):
         players_chunks = list(self.chunk(player_ids, 10))
+        players_output = []
         for players_chunk in players_chunks:
             try:
-                return await self.get_players(players_chunk)
-            except Exception as e:
-                print(e)
+                players_output += await self.get_players(players_chunk)
+            except pubg_python.exceptions.RateLimitError as e:
+                await self.wait_ratelimit(e.rl_reset)
+                players_output += await self.get_players(players_chunk)
+        return players_output
 
     async def get_players(self, player_ids):
         try:
