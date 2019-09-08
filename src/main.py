@@ -174,27 +174,38 @@ async def track(ctx, player_name=None):
         return player_id
 
     if player_name is None:
-        await send_destruct_message(ctx, '{}, type pubg track \'player_name\''.format(author.mention))
+        await send_destruct_message(ctx, 
+            '{}, type pubg track \'player_name\''.format(author.mention))
         return False
 
-    if config['bot']['track_only_one'] and len(db.get_author_tracked_players(author, channel)) > 0:
-        await send_destruct_message(ctx, '{} only one track allowed, untrack to track new'.format(author.mention))
+    _track_onlyone = config['bot']['track_only_one']
+    _tracked_count = len(db.get_author_tracked_players(author, channel))
+    if _track_onlyone and _tracked_count  > 0:
+        msg = '{} only one track allowed, untrack to track new'
+        await send_destruct_message(ctx, msg.format(author.mention))
         return False
 
     player_id = await _find_player_id_by_name(player_name)
     if player_id == -1:
-        await send_destruct_message(ctx, '{}, player {} not found'.format(author.mention, player_name))
+        msg = '{}, player {} not found'
+        await send_destruct_message(ctx, 
+            msg.format(author.mention, player_name))
         return False
 
     if db.is_author_track_player(author, channel, player_id):
-        await send_destruct_message(ctx, '{}, player {} already tracked by you'.format(author.mention, player_name))
+        msg = '{}, player {} already tracked by you'
+        await send_destruct_message(ctx, 
+            msg.format(author.mention, player_name))
         return False
 
     if not db.insert_player_to_author(author, channel, player_id):
-        await send_destruct_message(ctx, '{}, something wrong with inserting player {}.'.format(author.mention, player_name))
+        msg = '{}, something wrong with inserting player {}.'
+        await send_destruct_message(ctx, 
+            msg.format(author.mention, player_name))
         return False
 
-    await ctx.send('{}, player {} added to your track list '.format(author.mention, player_name))
+    msg = '{}, player {} added to your track list '
+    await ctx.send(msg.format(author.mention, player_name))
     return True
 
 
@@ -209,24 +220,31 @@ async def untrack(ctx, player_name=None):
         player_id = db.get_player_id_by_name(player_name)
     else:
         if not config['bot']['track_only_one']:
-            await send_destruct_message(ctx, '{}, type pubg untrack \'player_name\''.format(author.mention))
+            msg = '{}, type pubg untrack \'player_name\''
+            await send_destruct_message(ctx, msg.format(author.mention))
             return False
         try:
             player_id = db.get_author_tracked_players(author, channel)[0]
             player_name = db.get_player_name_by_id(player_id)
         except IndexError:
-            await send_destruct_message(ctx, '{}, your track list already empty'.format(author.mention))
+            msg = '{}, your track list already empty'
+            await send_destruct_message(ctx, msg.format(author.mention))
             return False
 
     if player_id == -1:
-        await send_destruct_message(ctx, '{}, {} doesn\'t found in tracked players'.format(author.mention, player_name))
+        msg = '{}, {} doesn\'t found in tracked players'
+        await send_destruct_message(ctx, 
+            msg.format(author.mention, player_name))
         return False
 
     if not db.remove_player_from_author(author, channel, player_id):
-        await send_destruct_message(ctx, '{}, {} is not in your track list'.format(author.mention, player_name))
+        msg = '{}, {} is not in your track list'
+        await send_destruct_message(ctx, 
+            msg.format(author.mention, player_name))
         return False
 
-    await send_destruct_message(ctx, '{}, {} removed from your track list'.format(author.mention, player_name))
+    msg = '{}, {} removed from your track list'
+    await send_destruct_message(ctx, msg.format(author.mention, player_name))
     return True
 
 
@@ -239,11 +257,13 @@ async def list(ctx):
 
     trackedPlayers = db.get_author_tracked_players(author, channel)
     if len(trackedPlayers) == 0:
-        await send_destruct_message(ctx, '{}, your track list is empty'.format(author.mention))
+        msg = '{}, your track list is empty'
+        await send_destruct_message(ctx, msg.format(author.mention))
         return False
 
     content = ','.join(db.get_player_names_by_ids(trackedPlayers))
-    await send_destruct_message(ctx, '{}, track list: {}'.format(author.mention, content))
+    msg = '{}, track list: {}'
+    await send_destruct_message(ctx, msg.format(author.mention, content))
 
 
 @bot.command(pass_context=True, guild_only=True)
@@ -255,11 +275,13 @@ async def last(ctx, player_name=None):
 
     if player_name is None:
         if not config['bot']['track_only_one']:
-            await send_destruct_message(ctx, '{}, type pubg last \'player_name\''.format(author.mention))
+            msg = '{}, type pubg last \'player_name\''
+            await send_destruct_message(ctx, msg.format(author.mention))
             return False
         players = db.get_author_tracked_players(author, channel)
         if not players:
-            await send_destruct_message(ctx, '{}, your track list is empty'.format(author.mention))
+            msg = '{}, your track list is empty'
+            await send_destruct_message(ctx, msg.format(author.mention))
             return False
         player_id = players[0]
         player_name = db.get_player_name_by_id(player_id)
@@ -270,23 +292,33 @@ async def last(ctx, player_name=None):
         player_id = db.get_player_id_by_name(player_name)
 
     if player_id == -1:
-        await send_destruct_message(ctx, '{}, {} not found'.format(author.mention, player_name))
+        msg = '{}, {} not found'
+        await send_destruct_message(ctx,
+            msg.format(author.mention, player_name))
         return False
 
     if not db.is_author_track_player(author, channel, player_id):
-        await send_destruct_message(ctx, '{}, {} is not in your track list'.format(author.mention, player_name))
+        msg = '{}, {} is not in your track list'
+        await send_destruct_message(ctx,
+            msg.format(author.mention, player_name))
         return False
 
     match_id = db.get_player_last_match_id(player_id)
     print(player_id, match_id)
     if match_id is False:
-        await send_destruct_message(ctx, '{}, {} has no tracked matches yet'.format(author.mention, player_name))
+        msg =  '{}, {} has no tracked matches yet'
+        await send_destruct_message(ctx,
+            msg.format(author.mention, player_name))
         return False
 
     match = await pubg.get_match(match_id)
     roster = pubg.find_roster_by_name(player_name, match.rosters)
-    image = render_stats(match.map_name, match.game_mode,
-                         roster.stats['rank'], roster.participants, len(match.rosters))
+    image = render_stats(match.map_name,
+                        match.game_mode,
+                        roster.stats['rank'],
+                        roster.participants, 
+                        len(match.rosters))
+
     embed = match_embed(author, match.id, image, 'last')
     logger.log('DEBUG',
         '[{}||{}] #{}||{} @{}',
@@ -295,7 +327,8 @@ async def last(ctx, player_name=None):
         ctx.message.channel.name,
         ctx.message.channel.id,
         author)
-    await channel.send(content='\u200b', embed=embed, files=[discord.File(image), discord.File('./img/footer.png')])
+    await channel.send(content='\u200b', embed=embed,
+        files=[discord.File(image), discord.File('./img/footer.png')])
     os.remove(image)
 
 @bot.command(pass_context=True, guild_only=True)
