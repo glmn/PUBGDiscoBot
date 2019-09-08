@@ -239,7 +239,7 @@ async def untrack(ctx, player_name=None):
 
     if not db.remove_player_from_author(author, channel, player_id):
         msg = '{}, {} is not in your track list'
-        await send_destruct_message(ctx, 
+        await send_destruct_message(ctx,
             msg.format(author.mention, player_name))
         return False
 
@@ -316,7 +316,7 @@ async def last(ctx, player_name=None):
     image = render_stats(match.map_name,
                         match.game_mode,
                         roster.stats['rank'],
-                        roster.participants, 
+                        roster.participants,
                         len(match.rosters))
 
     embed = match_embed(author, match.id, image, 'last')
