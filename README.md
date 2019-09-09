@@ -1,5 +1,10 @@
 <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/preview.gif" alt="PUBGDiscoBot" align="center">
-<h6 align="center">DAMAGE | KILLS | ASSISTS | REVIVES | LONGEST KILL | HS | DISTANCE</h3>
+
+<h3 align="center">
+    <a href="https://discordapp.com/api/oauth2/authorize?client_id=485214088763539466&permissions=67631168&scope=bot">
+        INVITE BOT TO DISCORD
+    </a>
+</h3>
 
 <h4 align="center">
     Track and push after-match statistics to discord channel<br>
@@ -9,11 +14,9 @@
     <img src="https://img.shields.io/github/last-commit/glmn/PUBGDiscoBot?style=flat">
     <img src="https://img.shields.io/static/v1?label=library&message=discord.py&color=brightgreen&style=flat">
     <img src="https://img.shields.io/static/v1?label=library&message=pubg_python&color=brightgreen&style=flat">
-    <img src="https://img.shields.io/discord/608550740612349952?label=discord&style=flat">  
+    <a href="https://discord.gg/p6TGxqB"><img src="https://img.shields.io/discord/608550740612349952?label=discord&style=flat"></a>
 </p>
-
 <hr>
-
 <a href="https://discordapp.com/api/oauth2/authorize?client_id=485214088763539466&permissions=67631168&scope=bot" align="right">
   <img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/invite.png" height="100" alt="PUBGDiscoBot" align="right">
 </a>
