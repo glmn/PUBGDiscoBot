@@ -59,14 +59,24 @@ async def main_loop():
                 authors_channels[channel_id] = []
             authors_channels[channel_id].append(author)
         return authors_channels.items()
+    
+    def _remove_untracked_players():
+        player_ids = db.get_player_ids()
+        for player_id in player_ids:
+            authors = db.get_authors_by_player_id(player_id)
+            if len(authors) == 0:
+                db.remove_player(player_id)
 
     while True:
         await bot.wait_until_ready()
         await asyncio.sleep(1)
 
+        _remove_untracked_players()
+
         player_ids = db.get_player_ids()
         if not player_ids:
             continue
+        
 
         players_data = await pubg.get_players_data(player_ids)
         players_wo_matches = [player for player in players_data

@@ -1,5 +1,6 @@
 import time
 from config import config
+from tinydb.operations import delete
 from tinydb import TinyDB, Query, where
 
 
@@ -26,7 +27,7 @@ class db_manager:
         result['analyzedMatches'].append(match_id)
         return self.players_table.write_back([result])
 
-    def get_player_ids(self, chunk_size=10):
+    def get_player_ids(self):
         time_to_compare = time.time() - config['delay']['simple']
         players = self.players_table.search(
             where('lastCheck') <= time_to_compare)
@@ -119,6 +120,14 @@ class db_manager:
             return result['players']
         except IndexError:
             return []
+
+    def remove_player(self, player_id):
+        Player = Query()
+        try:
+            result = self.players_table.search(Player.id == player_id)[0]
+            return self.players_table.remove(doc_ids=[result.doc_id])
+        except IndexError:
+            return False
 
     def remove_player_from_author(self, author, channel, player_id):
         try:
