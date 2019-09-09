@@ -75,8 +75,7 @@ async def main_loop():
 
         player_ids = db.get_player_ids()
         if not player_ids:
-            continue
-        
+            continue        
 
         players_data = await pubg.get_players_data(player_ids)
         players_wo_matches = [player for player in players_data

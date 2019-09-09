@@ -1,6 +1,5 @@
 import time
 from config import config
-from tinydb.operations import delete
 from tinydb import TinyDB, Query, where
 
 
