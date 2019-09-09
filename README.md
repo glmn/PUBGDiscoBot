@@ -11,10 +11,12 @@
 </h4>
 <p align="center">
     <a href="https://travis-ci.org/glmn/PUBGDiscoBot"><img src="https://api.travis-ci.org/glmn/PUBGDiscoBot.svg?branch=master"></a>
+    <a href="https://www.codacy.com/manual/glmn/PUBGDiscoBot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=glmn/PUBGDiscoBot&amp;utm_campaign=Badge_Grade"><img src="https://img.shields.io/codacy/grade/bcdffee78eb24bf6bc3c3728bae19aee"></a>
     <img src="https://img.shields.io/github/last-commit/glmn/PUBGDiscoBot?style=flat">
     <img src="https://img.shields.io/static/v1?label=library&message=discord.py&color=brightgreen&style=flat">
     <img src="https://img.shields.io/static/v1?label=library&message=pubg_python&color=brightgreen&style=flat">
     <a href="https://discord.gg/p6TGxqB"><img src="https://img.shields.io/discord/608550740612349952?label=discord&style=flat"></a>
+    
 </p>
 <hr>
 <a href="https://discordapp.com/api/oauth2/authorize?client_id=485214088763539466&permissions=67631168&scope=bot" align="right">
