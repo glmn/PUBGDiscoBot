@@ -1,5 +1,4 @@
 import os
-import time
 import discord
 import asyncio
 from config import config
@@ -59,7 +58,7 @@ async def main_loop():
                 authors_channels[channel_id] = []
             authors_channels[channel_id].append(author)
         return authors_channels.items()
-    
+
     def _remove_untracked_players():
         player_ids = db.get_player_ids()
         for player_id in player_ids:
@@ -75,7 +74,7 @@ async def main_loop():
 
         player_ids = db.get_player_ids()
         if not player_ids:
-            continue        
+            continue
 
         players_data = await pubg.get_players_data(player_ids)
         players_wo_matches = [player for player in players_data
@@ -154,7 +153,7 @@ async def on_guild_join(guild):
 async def on_message(message):
     if message.content.startswith(config['bot']['prefix']):
         logger.log('MSG',
-            '[{}||{}] #{}||{} @{}||{} > {}', 
+            '[{}||{}] #{}||{} @{}||{} > {}',
             message.guild.name,
             message.guild.id,
             message.channel.name,
@@ -242,7 +241,7 @@ async def untrack(ctx, player_name=None):
 
     if player_id == -1:
         msg = '{}, {} doesn\'t found in tracked players'
-        await send_destruct_message(ctx, 
+        await send_destruct_message(ctx,
             msg.format(author.mention, player_name))
         return False
 

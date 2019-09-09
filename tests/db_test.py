@@ -1,6 +1,4 @@
 import sys
-import copy
-import pytest
 sys.path.insert(0, 'src')
 sys.path.insert(0, '../src')
 from config import config

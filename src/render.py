@@ -1,5 +1,5 @@
 import time
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageDraw, ImageFont
 
 def render_stats(map_name, mode, position, teammates, rosters_count):
   
@@ -19,7 +19,6 @@ def render_stats(map_name, mode, position, teammates, rosters_count):
 
     #Fonts
     title_style = ImageFont.truetype("fonts/MyriadPro-Bold.otf", 10)
-    fontRegular = ImageFont.truetype("fonts/MyriadPro-Regular.otf", 22)
     fontBold = ImageFont.truetype("fonts/MyriadPro-Bold.otf", 20)
     fontPosition = ImageFont.truetype("fonts/MyriadPro-Bold.otf", 15)
 
@@ -31,7 +30,6 @@ def render_stats(map_name, mode, position, teammates, rosters_count):
 
     #Colors
     white = (252, 255, 255, 255)
-    grey = (208, 225, 229, 255)
     orange = (255, 169, 20, 255)
     playerColors = [(253, 204, 9, 255), (207,207,207,255), (207,155,104,255), (75,124,207,255)]
 
@@ -39,7 +37,7 @@ def render_stats(map_name, mode, position, teammates, rosters_count):
     winText = 'TOP-' + str(position)
     draw.text((547, 11), winText, fill=white, font=fontPosition)
 
-    #Mode icons 
+    #Game mode icons
     for i in range(iconsCount):
         image.paste(userIcon, (icon_padding , 9), userIcon)
         icon_padding += 15
@@ -50,7 +48,7 @@ def render_stats(map_name, mode, position, teammates, rosters_count):
     metrics = ['DAMAGE', 'KILLS', 'ASSISTS', 'REVIVES', 'LONGEST', 'HS', 'DISTANCE']
     _metric_padding = metric_padding
     for index, metric in enumerate(metrics):
-        draw.text((_metric_padding, metric_margin), metric, font=title_style, fill=white)        
+        draw.text((_metric_padding, metric_margin), metric, font=title_style, fill=white)
         _metric_padding += title_style.getsize(metric)[0] + 28
 
     max_values = [
@@ -71,7 +69,7 @@ def render_stats(map_name, mode, position, teammates, rosters_count):
 
         draw.ellipse((10, player_margin + 5, 18, player_margin + 5 + 8), fill=playerColors[index])
         draw.text((24, player_margin), mate.name.upper()[:12], fill=white, font=fontBold)
-        
+
         _metric_padding = metric_padding
         for index, metric in enumerate(metrics):
             metric_fill = white
