@@ -151,6 +151,8 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_message(message):
+    if not message.guild:
+        return False
     if message.content.startswith(config['bot']['prefix']):
         logger.log('MSG',
             '[{}||{}] #{}||{} @{}||{} > {}',
@@ -314,7 +316,7 @@ async def last(ctx, player_name=None):
     match_id = db.get_player_last_match_id(player_id)
     print(player_id, match_id)
     if match_id is False:
-        msg =  '{}, {} has no tracked matches yet'
+        msg =  '{}, {} has no tracked matches yet. Play more, achive at least TOP-3 rank to be analyzed.'
         await send_destruct_message(ctx,
             msg.format(author.mention, player_name))
         return False
@@ -344,42 +346,20 @@ async def last(ctx, player_name=None):
 async def help(ctx):
     await ctx.message.delete(delay=config['delay']['delete'])
     pre = config['bot']['prefix']
-    commands = [
-        pre + 'track',
-        pre + 'untrack',
-        pre + 'list',
-        pre + 'last',
-        pre + 'help']
-
-    attributes = [
-        'player_name',
-        'player_name',
-        '\u200b',
-        '\u200b',
-        '\u200b'
-    ]
-
-    descriptions = [
-        '_Add player to track list_',
-        '_Remove player from track list_',
-        '_Show players from track list_',
-        '_Show last match_',
-        '_Show this help message_']
-
-    commands_str = '\n'.join(commands)
-    descriptions_str = '\n'.join(descriptions)
-    attributes_str = '\n'.join(attributes)
 
     title = "About PUBGDiscoBot"
-    description = """PUBGDiscoBot made with :hearts: by <@132402729887727616>
-                     This is an open-source project. You can find it on [GitHub](https://github.com/glmn/PUBGDiscoBot)"""
+    description =  "!IMPORTANT! This bot tracks only STEAM PUBG players\n\n"
+    description += "PUBGDiscoBot made with :hearts: by <@132402729887727616>\n"
+    description += "This is an open-source project. "
+    description += "You can find it on "
+    description += "[GitHub](https://github.com/glmn/PUBGDiscoBot)"
 
     embed = discord.Embed(colour=discord.Colour(0x50e3c2),
                           title=title,
                           description=description)
-    embed.add_field(name="**Commands**", value=commands_str, inline=True)
-    embed.add_field(name="**Attributes**", value=attributes_str, inline=True)
-    embed.add_field(name="**Description**", value=descriptions_str, inline=True)
+    embed.add_field(name="**How to track player?**", value='Type `pubg track IGN` where IGN - Ingame nickname\nExample: `pubg track shroud`', inline=False)
+    embed.add_field(name="**How to untrack player?**", value='Just type `pubg untrack` to empty your track list', inline=False)
+    embed.add_field(name="**Another commands**", value='`pubg list` - Shows your tracked players\n`pubg last` - Shows last game with TOP-3 rank for your tracked player\n`pubg help` - Shows this help message', inline=False)
     await ctx.send(content='\u200b', embed=embed)
 
 try:
