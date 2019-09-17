@@ -151,6 +151,8 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_message(message):
+    if not message.guild:
+        return False
     if message.content.startswith(config['bot']['prefix']):
         logger.log('MSG',
             '[{}||{}] #{}||{} @{}||{} > {}',
