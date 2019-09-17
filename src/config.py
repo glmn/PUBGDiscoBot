@@ -5,8 +5,8 @@ config = {
     'track_only_one': True
   },
   'delay': {
-    'simple': 600.0,
-    'no_matches': 1200.0,
+    'simple': 1200.0,
+    'no_matches': 1800.0,
     'delete': 10
   },
   'tokens': {
