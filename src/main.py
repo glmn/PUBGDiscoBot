@@ -109,8 +109,7 @@ async def main_loop():
             if len(authors) == 0:
                 continue
 
-            image = render_stats(match.map_name, match.game_mode, rank,
-                                 roster.participants, len(match.rosters))
+            image = render_stats(match, roster, pubg)
 
             for channel_id, authors in _split_authors(authors):
                 guild_id = db.get_guild_by_channel_id(channel_id)
@@ -323,11 +322,7 @@ async def last(ctx, player_name=None):
 
     match = await pubg.get_match(match_id)
     roster = pubg.find_roster_by_name(player_name, match.rosters)
-    image = render_stats(match.map_name,
-                        match.game_mode,
-                        roster.stats['rank'],
-                        roster.participants,
-                        len(match.rosters))
+    image = render_stats(match, roster, pubg)
 
     embed = match_embed(author, match.id, image, 'last')
     logger.log('DEBUG',
