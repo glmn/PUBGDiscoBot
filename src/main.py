@@ -340,7 +340,6 @@ async def last(ctx, player_name=None):
 @commands.guild_only()
 async def help(ctx):
     await ctx.message.delete(delay=config['delay']['delete'])
-    pre = config['bot']['prefix']
 
     title = "About PUBGDiscoBot"
     description =  "!IMPORTANT! This bot tracks only STEAM PUBG players\n\n"

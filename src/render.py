@@ -1,5 +1,4 @@
 import time
-from pubg_python import Telemetry
 from PIL import Image, ImageDraw, ImageFont
 
 def render_stats(match, roster, pubg):
@@ -14,11 +13,11 @@ def render_stats(match, roster, pubg):
     position = roster.stats['rank']
 
     for index, mate in enumerate(teammates):
-        player_attacks = [x for x in attacks 
-            if x.attacker.account_id == mate.player_id 
-            and x.weapon.category == 'Weapon' 
+        player_attacks = [x for x in attacks
+            if x.attacker.account_id == mate.player_id
+            and x.weapon.category == 'Weapon'
             and x.weapon.sub_category in ['Main', 'Handgun']]
-        player_damages = [x for x in damages 
+        player_damages = [x for x in damages
             if x.attacker.account_id == mate.player_id]
 
         if len(player_damages) == 0:
@@ -26,12 +25,12 @@ def render_stats(match, roster, pubg):
             headshot_rate = 0.00
             continue
 
-        player_used_weapon = {x.weapon.item_id:x.fire_weapon_stack_count 
+        player_used_weapon = {x.weapon.item_id:x.fire_weapon_stack_count
             for x in player_attacks}
         shots = sum(player_used_weapon.values())
-        hits = len([x for x in player_damages if x.damage_reason in 
+        hits = len([x for x in player_damages if x.damage_reason in
             ["ArmShot","HeadShot","LegShot","PelvisShot","TorsoShot"]])
-        headshots = len([x for x in player_damages 
+        headshots = len([x for x in player_damages
             if x.damage_reason == 'HeadShot'])
         accuracy = (hits / shots * 100) if shots > 0 else 0
         headshot_rate = (headshots / hits * 100) if hits > 0 else 0
