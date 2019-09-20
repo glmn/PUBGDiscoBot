@@ -84,7 +84,7 @@ def render_stats(match, roster, pubg):
         icon_padding += 15
 
     #Sort mates by kills count
-    teammates.sort(key=lambda x:x.kills, reverse=True)
+    teammates.sort(key=lambda x:(x.damage_dealt, x.kills), reverse=True)
 
     metrics = [
         'DAMAGE',
