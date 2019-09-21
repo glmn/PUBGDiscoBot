@@ -35,8 +35,10 @@ def render_stats(match, roster, pubg):
         accuracy = (hits / shots * 100) if shots > 0 else 0
         headshot_rate = (headshots / hits * 100) if hits > 0 else 0
 
-        teammates[index].accuracy = accuracy
-        teammates[index].headshot_rate = headshot_rate
+        teammates[index].accuracy = 0
+        teammates[index].headshot_rate = 0
+        # teammates[index].accuracy = accuracy
+        # teammates[index].headshot_rate = headshot_rate
 
 
     if(map_name == 'Desert_Main'):
@@ -111,17 +113,21 @@ def render_stats(match, roster, pubg):
     for index, mate in enumerate(teammates):
         damage = round(mate.damage_dealt)
         longest = round(mate.longest_kill)
-        values = [damage, mate.kills, mate.assists, longest, mate.accuracy, mate.headshot_rate]
+        values = [damage, mate.kills, mate.assists, longest,
+            mate.accuracy, mate.headshot_rate]
 
-        draw.ellipse((10, player_margin + 5, 18, player_margin + 5 + 8), fill=playerColors[index])
-        draw.text((24, player_margin), mate.name.upper()[:12], fill=white, font=fontBold)
+        draw.ellipse((10, player_margin + 5, 18, player_margin + 5 + 8),
+            fill=playerColors[index])
+        draw.text((24, player_margin), mate.name.upper()[:12],
+            fill=white, font=fontBold)
 
         _metric_padding = metric_padding
         for index, metric in enumerate(metrics):
             metric_fill = white
             if values[index] == max_values[index]:
                 metric_fill = orange
-            if isinstance(values[index], float):
+            # Doesn't like the way i did this
+            if index >= len(values)-2:
                 values[index] = format(values[index], '.2f')
 
             draw.text((_metric_padding, player_margin),
