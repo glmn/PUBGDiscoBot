@@ -3,6 +3,7 @@ import discord
 import asyncio
 from config import config
 from loguru import logger
+from discord import errors
 from pubg import pubg_manager
 from database import db_manager
 from render import render_stats
@@ -32,8 +33,18 @@ logger.add("logs/messages.log",
     rotation="10 MB")
 
 async def send_destruct_message(ctx, message=None):
-    msg = await ctx.send(message) if message else ctx.message
-    await msg.delete(delay=config['delay']['delete'])
+    try:
+        msg = await ctx.send(message) if message else ctx.message
+        await msg.delete(delay=config['delay']['delete'])
+    except errors.Forbidden:
+        logger.error(
+            '[{}||{}] #{}||{} @{}',
+            ctx.message.guild.name,
+            ctx.message.guild.id,
+            ctx.message.channel.name,
+            ctx.message.channel.id,
+            ctx.message.author
+        )
 
 
 def match_embed(authors, match_id, image, command=None):
@@ -127,8 +138,11 @@ async def main_loop():
                     channel.name,
                     channel.id,
                     authors)
-                await channel.send(content="\u200b", embed=embed,
+                try:
+                    await channel.send(content="\u200b", embed=embed,
                                    files=[image_stats, image_footer])
+                except errors.Forbidden as error:
+                    logger.error(error)
             os.remove(image)
 
 
@@ -332,8 +346,18 @@ async def last(ctx, player_name=None):
         ctx.message.channel.name,
         ctx.message.channel.id,
         author)
-    await channel.send(content='\u200b', embed=embed,
-        files=[discord.File(image), discord.File('./img/footer.png')])
+    try:
+        await channel.send(content='\u200b', embed=embed,
+            files=[discord.File(image), discord.File('./img/footer.png')])
+    except errors.Forbidden:
+        logger.error(
+            '[{}||{}] #{}||{} @{}',
+            ctx.message.guild.name,
+            ctx.message.guild.id,
+            ctx.message.channel.name,
+            ctx.message.channel.id,
+            author
+        )
     os.remove(image)
 
 @bot.command(pass_context=True, guild_only=True)
