@@ -35,10 +35,8 @@ def render_stats(match, roster, pubg):
         accuracy = (hits / shots * 100) if shots > 0 else 0
         headshot_rate = (headshots / hits * 100) if hits > 0 else 0
 
-        teammates[index].accuracy = 0
-        teammates[index].headshot_rate = 0
-        # teammates[index].accuracy = accuracy
-        # teammates[index].headshot_rate = headshot_rate
+        teammates[index].accuracy = accuracy
+        teammates[index].headshot_rate = headshot_rate
 
 
     if(map_name == 'Desert_Main'):
