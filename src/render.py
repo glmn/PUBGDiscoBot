@@ -46,7 +46,7 @@ class RenderStats():
         self.telemetry = telemetry
         self.roster = roster
         self.teammates = [mate for mate in roster.participants]
-        self.icons_count = 4 if 'squad' in match.game_mode else len(roster)
+        self.icons_count = 4 if 'squad' in match.game_mode else len(self.teammates) #noqa
         self.sort_teammates()
         self.calculations()
         self.max_values = self.metrics_max_values()
