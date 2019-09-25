@@ -65,7 +65,7 @@ Bot uses prefix `pubg ` to detect mention. So every command should start from th
 
 ### Lifetime Lines
 New feature implemented in `v0.1.4`. These lines shows your moves, kills, knocks and rides. They are also calculated for all of your roster! This module still in beta and due to this might be some problems. Please feel free to create a new issue if you will see any problems with lifetime graph.
-<img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/lifetime.png" alt="PUBGDiscoBot" align="right"> 
+<img src="https://raw.githubusercontent.com/glmn/PUBGDiscoBot/master/misc/lifetime.png" alt="PUBGDiscoBot" height="150" align="right"> 
 
 ### Multitrack
 If multiple channel participants track same player or track different players but in same game roster, then bot will send only one message with all participants mentions. In example below, bot sent only one message instead of three, because they are all played in one roster
