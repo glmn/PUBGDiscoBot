@@ -1,0 +1,10 @@
+from pubg_python import Shard
+
+VERSION = '2.0.0'
+DISCORD_TOKEN = 'NjE5NjMzMjExMTQ4MDc1MDEw.XY1lbg.fstrhxOrOun-3pSxj8cKnpQ1Y4A'
+PUBG_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyMDAzOThhMC1iMzE1LTAxMzctYjg2OC01ZmJlZDQ2ZWVjMzkiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTY3ODAyNzAzLCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6Ii0xNTcxN2U2NS1iMzY4LTQxZjMtYWI3Yy0wMjEyMWM1YzQyODAifQ.8_QyyDxdAOleXC4r93Axuud_1egqkI0oqyXda00hTB0'  # noqa: E501
+PUBG_SHARD = Shard.STEAM
+PREFIX = 'pubg '
+DESCRIPTION = 'Watch your after match stats for TOP-3 rank games'
+OWNER_ID = '132402729887727616'
+EXTENSIONS = ['help']
