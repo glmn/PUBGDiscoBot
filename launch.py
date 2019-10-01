@@ -1,19 +1,17 @@
-from pubgdiscobot.core import PUBGDiscoBot
 from discord import Game
+from pubgdiscobot.core import PUBGDiscoBot
 from pubgdiscobot.config import (
-    PREFIX, DESCRIPTION, VERSION, OWNER_ID
+    _prefix_, _version_, _owner_id_
 )
 
 bot = PUBGDiscoBot(
-    command_prefix=PREFIX,
-    description=DESCRIPTION,
-    owner_id=OWNER_ID,
-    activity=Game(name="v{}".format(VERSION), type=0),
+    command_prefix=_prefix_,
+    owner_id=_owner_id_,
+    activity=Game(name="v{}".format(_version_), type=0),
     case_insensitive=True,
-    pm_help=False
+    help_command=None
 )
-bot.remove_command('help')
 
 if __name__ == "__main__":
-    print('PUBGDiscoBot version: {}'.format(VERSION))
+    print('PUBGDiscoBot version: {}'.format(_version_))
     bot.run()

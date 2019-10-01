@@ -4,7 +4,4 @@ __pycache__
 .coverage
 htmlcov
 .vscode/.ropeproject/config.py
-src/logs/messages.log
-src/logs/errors.log
-src/logs/debug.log
-src/logs/infos.log
+.env

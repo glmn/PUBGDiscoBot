@@ -1,10 +1,16 @@
+import os
 from pubg_python import Shard
+from dotenv import load_dotenv
+load_dotenv()
 
-VERSION = '2.0.0'
-DISCORD_TOKEN = 'NjE5NjMzMjExMTQ4MDc1MDEw.XY1lbg.fstrhxOrOun-3pSxj8cKnpQ1Y4A'
-PUBG_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyMDAzOThhMC1iMzE1LTAxMzctYjg2OC01ZmJlZDQ2ZWVjMzkiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTY3ODAyNzAzLCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6Ii0xNTcxN2U2NS1iMzY4LTQxZjMtYWI3Yy0wMjEyMWM1YzQyODAifQ.8_QyyDxdAOleXC4r93Axuud_1egqkI0oqyXda00hTB0'  # noqa: E501
-PUBG_SHARD = Shard.STEAM
-PREFIX = 'pubg '
-DESCRIPTION = 'Watch your after match stats for TOP-3 rank games'
-OWNER_ID = '132402729887727616'
-EXTENSIONS = ['help']
+_version_ = '0.2.0'
+_prefix_ = 'pubg '
+_discord_token_ = os.getenv("DISCORD_TOKEN")
+_pubg_token_ = os.getenv("PUBG_TOKEN")
+_pubg_shard_ = Shard.STEAM
+
+_mongodb_host_ = os.getenv("MONGODB_HOST", 'localhost')
+_mongodb_port_ = os.getenv("MONGODB_PORT", 27017)
+
+_owner_id_ = os.getenv("OWNER_ID", 132402729887727616)
+_extensions_ = ['add', 'help']
