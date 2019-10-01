@@ -43,7 +43,7 @@ class RegisterCommand(Cog):
                     player_names=[player_name])[0]
             except NotFoundError:
                 await ctx.send(MSG_PUBG_IGN_NOT_FOUND.format(
-                    ctx.author.mention, player_name))
+                    user_mention, player_name))
                 return
             player_id = player.id
 
@@ -51,8 +51,7 @@ class RegisterCommand(Cog):
             user = self.db_users.find({'id': user_id}).limit(1)
             current_player_id = user[0]['player_id']
             if player_id == current_player_id:
-                await ctx.send(MSG_NAME_EQUAL.format(user_mention,
-                                                     player_name))
+                await ctx.send(MSG_NAME_EQUAL.format(user_mention, player_name))  # noqa: E501
                 return
             if self.db_users.count_documents({'player_id': current_player_id}) == 1:  # noqa: E501
                 self.db_players.delete_one({'id': current_player_id})
@@ -65,7 +64,7 @@ class RegisterCommand(Cog):
         if not player_from_db:
             self.db_players.add(id=player_id, name=player_name, shard='steam',
                                 last_check=0, matches=list())
-        await ctx.send(MSG_ADDED.format(ctx.author.mention, player_name))
+        await ctx.send(MSG_ADDED.format(user_mention, player_name))
 
     def delete_unused_player(self, player_id):
         if self.db_users.count_documents({'player_id': player_id}) == 0:
