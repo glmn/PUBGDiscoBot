@@ -58,12 +58,13 @@ class RegisterCommand(Cog):
             self.db_users.update({'id': user_id, 'guild_id': guild_id},
                                  {'$set': {'player_id': player_id}})
         else:
-            self.db_users.add(id=user_id, name=user_name, shard='steam',
+            self.db_users.add(id=user_id, name=user_name, shard=_pubg_shard_,
                               player_id=player_id, guild_id=guild_id,
                               channel_id=channel_id)
         if not player_from_db:
-            self.db_players.add(id=player_id, name=player_name, shard='steam',
-                                last_check=0, matches=list())
+            self.db_players.add(id=player_id, name=player_name,
+                                shard=_pubg_shard_, last_check=0,
+                                matches=list())
         await ctx.send(MSG_ADDED.format(user_mention, player_name))
 
     def delete_unused_player(self, player_id):
