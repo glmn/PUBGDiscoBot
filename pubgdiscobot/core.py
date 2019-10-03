@@ -11,8 +11,12 @@ class PUBGDiscoBot(commands.Bot):
         super().__init__(**kwargs)
         self.db_users = UsersTable()
         self.db_guilds = GuildsTable()
+        self.connected_firstly = False
 
     async def on_ready(self):
+        if not self.connected_firstly:
+            print('RECONNECTED!')
+            return
         print('Loading Extensions...')
         for extension in _extensions_:
             try:
@@ -41,8 +45,8 @@ class PUBGDiscoBot(commands.Bot):
 
     async def on_guild_remove(self, guild):
         # TODO: remove guild from database and remove all child members with
-        #       tracked players also.
-        pass
+        #       tracked players also.цы 
+        
 
     async def on_member_remove(self, member):
         # TODO: remove member's tracked player from database
