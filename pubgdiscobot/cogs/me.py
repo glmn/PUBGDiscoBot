@@ -20,12 +20,14 @@ class MeCommand(Cog):
     @commands.guild_only()
     async def me_command(self, ctx):
         user_id = ctx.author.id
+        guild_id = ctx.author.guild.id
+        print(guild_id)
         user_mention = ctx.author.mention
-        if not self.db_users.exists(user_id):
+        user = self.db_users.find_one({'id': user_id, 'guild_id': guild_id})
+        if not user:
             await ctx.send(MSG_NOT_REGISTERED.format(user_mention))
             return
-        user = self.db_users.find({'id': user_id}).limit(1)
-        player = self.db_players.find({'id': user[0]['player_id']}).limit(1)[0]
+        player = self.db_players.find_one({'id': user['player_id']})
         await ctx.send(MSG_PLAYER_FOUND.format(user_mention, player['name']))
 
 

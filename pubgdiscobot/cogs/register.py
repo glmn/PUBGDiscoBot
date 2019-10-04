@@ -34,8 +34,8 @@ class RegisterCommand(Cog):
         player_from_db = False
 
         if self.db_players.exists(player_name, "name"):
-            players = self.db_players.find({"name": player_name}).limit(1)
-            player_id = players[0]['id']
+            players = self.db_players.find_one({"name": player_name})
+            player_id = players['id']
             player_from_db = True
         else:
             try:
@@ -47,9 +47,9 @@ class RegisterCommand(Cog):
                 return
             player_id = player.id
 
-        if self.db_users.exists(user_id):
-            user = self.db_users.find({'id': user_id}).limit(1)
-            current_player_id = user[0]['player_id']
+        user = self.db_users.find_one({'id': user_id, 'guild_id': guild_id})
+        if user:
+            current_player_id = user['player_id']
             if player_id == current_player_id:
                 await ctx.send(MSG_NAME_EQUAL.format(user_mention, player_name))  # noqa: E501
                 return
@@ -58,12 +58,13 @@ class RegisterCommand(Cog):
             self.db_users.update({'id': user_id, 'guild_id': guild_id},
                                  {'$set': {'player_id': player_id}})
         else:
-            self.db_users.add(id=user_id, name=user_name, shard=_pubg_shard_,
+            self.db_users.add(id=user_id, name=user_name,
+                              shard=_pubg_shard_.value,
                               player_id=player_id, guild_id=guild_id,
                               channel_id=channel_id)
         if not player_from_db:
             self.db_players.add(id=player_id, name=player_name,
-                                shard=_pubg_shard_, last_check=0,
+                                shard=_pubg_shard_.value, last_check=0,
                                 matches=list())
         await ctx.send(MSG_ADDED.format(user_mention, player_name))
 

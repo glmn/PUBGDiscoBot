@@ -27,6 +27,9 @@ class Database(MongoClient):
     def find(self, *args, **kwargs):
         return self.pdb[self.table].find(*args, **kwargs)
 
+    def find_one(self, *args, **kwargs):
+        return self.pdb[self.table].find_one(*args, **kwargs)
+
     def update(self, *args, **kwargs):
         return self.pdb[self.table].update(*args, **kwargs)
 
@@ -35,6 +38,9 @@ class Database(MongoClient):
 
     def delete_one(self, *args, **kwargs):
         return self.pdb[self.table].delete_one(*args, **kwargs)
+
+    def delete_many(self, *args, **kwargs):
+        return self.pdb[self.table].delete_many(*args, **kwargs)
 
 
 class UsersTable(Database):

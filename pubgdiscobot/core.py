@@ -1,7 +1,7 @@
 from pubgdiscobot.config import (
     _extensions_, _discord_token_
 )
-from pubgdiscobot.db import UsersTable, GuildsTable
+from pubgdiscobot.db import UsersTable, GuildsTable, PlayersTable
 from discord.ext import commands
 
 
@@ -11,6 +11,7 @@ class PUBGDiscoBot(commands.Bot):
         super().__init__(**kwargs)
         self.db_users = UsersTable()
         self.db_guilds = GuildsTable()
+        self.db_players = PlayersTable()
         self.connected_firstly = True
 
     async def on_ready(self):
@@ -22,8 +23,8 @@ class PUBGDiscoBot(commands.Bot):
             try:
                 self.load_extension(f'pubgdiscobot.cogs.{extension}')
                 print(f'Extension [{extension}] loaded successfuly')
-            except Exception:
-                print(f'Extension [{extension}] error while loading!')
+            except Exception as err:
+                print(f'Extension [{extension}] ERROR while loading! {err}')
 
         try:
             self.loop.create_task()
@@ -37,20 +38,30 @@ class PUBGDiscoBot(commands.Bot):
         await self.process_commands(message)
 
     async def on_guild_join(self, guild):
-        # TODO: add to database
         if self.db_guilds.exists(guild.id):
             return
+
         self.db_guilds.add(id=guild.id, name=guild.name,
                            members=guild.member_count)
 
     async def on_guild_remove(self, guild):
-        # TODO: remove guild from database and remove all child members with
-        #       tracked players also
-        pass
+        if not self.db_guilds.exists(guild.id):
+            return
 
-    async def on_member_remove(self, user):
-        # TODO: remove member's tracked player from database
-        pass
+        self.db_guilds.delete_one({'id': guild.id})
+        users = self.db_users.find({'guild_id': guild.id})
+        for user in users:
+            self.db_players.delete_one({'id': user['player_id']})
+        self.db_users.delete_many({'guild_id': guild.id})
+
+    async def on_member_remove(self, member):
+        if not self.db_users.exists(member.id):
+            return
+
+        guild_id = member.guild.id
+        user = self.db_users.find_one({'id': member.id, 'guild_id': guild_id})
+        self.db_players.delete_one({'id': user['player_id']})
+        self.db_users.delete_one({'id': member.id})
 
     def run(self):
         super().run(_discord_token_)
