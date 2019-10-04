@@ -11,7 +11,7 @@ class PUBGDiscoBot(commands.Bot):
         super().__init__(**kwargs)
         self.db_users = UsersTable()
         self.db_guilds = GuildsTable()
-        self.connected_firstly = False
+        self.connected_firstly = True
 
     async def on_ready(self):
         if not self.connected_firstly:
@@ -45,10 +45,10 @@ class PUBGDiscoBot(commands.Bot):
 
     async def on_guild_remove(self, guild):
         # TODO: remove guild from database and remove all child members with
-        #       tracked players also.цы 
-        
+        #       tracked players also
+        pass
 
-    async def on_member_remove(self, member):
+    async def on_member_remove(self, user):
         # TODO: remove member's tracked player from database
         pass
 
