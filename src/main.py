@@ -52,6 +52,12 @@ def match_embed(authors, match_id, image, command=None):
         mention = authors.mention
     elif command == None:
         mention = ', '.join(['<@{}>'.format(x['id']) for x in authors])
+    
+    mention += ''.join([
+        '\nIf you like this bot, please ',
+        '[vote up here](https://top.gg/bot/485214088763539466) ',
+        'to keep us alive. Thank you.'
+    ])
 
     embed = discord.Embed(colour=discord.Colour(0x50e3c2), description=mention)
     embed.set_image(url="attachment://{}".format(image))
@@ -129,6 +135,8 @@ async def main_loop():
                 if not guild_id in [x.id for x in bot.guilds]:
                     continue
                 channel = bot.get_channel(channel_id)
+                if not channel.guild:
+                    continue
                 embed = match_embed(authors, match.id, image)
 
                 image_stats = discord.File(image)
