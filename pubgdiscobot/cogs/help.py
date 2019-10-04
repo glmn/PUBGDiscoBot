@@ -4,7 +4,7 @@ from discord.ext import commands
 from discord.ext.commands import Cog
 
 
-class Help_Command(Cog):
+class HelpCommand(Cog):
 
     def __init__(self, bot):
         self.bot = bot
@@ -41,4 +41,4 @@ class Help_Command(Cog):
 
 
 def setup(bot):
-    bot.add_cog(Help_Command(bot))
+    bot.add_cog(HelpCommand(bot))
