@@ -48,7 +48,7 @@ class RenderStats():
         self.teammates = [mate for mate in roster.participants]
         self.icons_count = 4 if 'squad' in match.game_mode else len(self.teammates) #noqa
         self.sort_teammates()
-        self.calculations()
+        self.calculate_player_events()
         self.max_values = self.metrics_max_values()
         self.image = self.background_load()
         self.draw = ImageDraw.Draw(self.image)
@@ -58,10 +58,6 @@ class RenderStats():
             return dt.strptime(time_str, '%Y-%m-%dT%H:%M:%S.%fZ')
         except ValueError:
             return dt.strptime(time_str, '%Y-%m-%dT%H:%M:%SZ')
-
-
-    def calculations(self):
-        self.calculate_player_events()
 
 
     def background_load(self):
