@@ -4,6 +4,7 @@ from discord.ext.commands.errors import (
     NotOwner
 )
 from pubgdiscobot.db import UsersTable
+from pubgdiscobot.config import _owner_id_
 
 MSG_NOTOWNER_ERROR = '{} you are not an owner of this bot'
 
@@ -13,8 +14,11 @@ class NotifyCommand(Cog):
         self.bot = bot
         self.db_users = UsersTable()
 
+    async def is_owner(ctx):
+        return ctx.author.id == _owner_id_
+
     @commands.command(name='notify-all')
-    @commands.is_owner()
+    @commands.check(is_owner)
     async def notify_all_command(self, ctx, message):
         channels = self.db_users.distinct('channel_id')
         for channel in channels:
