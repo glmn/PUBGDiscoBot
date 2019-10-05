@@ -42,6 +42,9 @@ class Database(MongoClient):
     def delete_many(self, *args, **kwargs):
         return self.pdb[self.table].delete_many(*args, **kwargs)
 
+    def distinct(self, *args, **kwargs):
+        return self.pdb[self.table].distinct(*args, **kwargs)
+
 
 class UsersTable(Database):
 
