@@ -63,7 +63,7 @@ class GuildsTable(Database):
         super().__init__('guilds')
 
     def add(self, *args, **kwargs):
-        fields = ['id', 'name', 'members']
+        fields = ['id', 'name', 'members', 'prefix']
         super().add(fields, *args, **kwargs)
 
     def exists(self, guild_id):

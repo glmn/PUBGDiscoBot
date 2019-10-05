@@ -21,7 +21,6 @@ class MeCommand(Cog):
     async def me_command(self, ctx):
         user_id = ctx.author.id
         guild_id = ctx.author.guild.id
-        print(guild_id)
         user_mention = ctx.author.mention
         user = self.db_users.find_one({'id': user_id, 'guild_id': guild_id})
         if not user:

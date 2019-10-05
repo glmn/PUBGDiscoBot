@@ -1,18 +1,31 @@
-from pubgdiscobot.config import (
-    _extensions_, _discord_token_
-)
-from pubgdiscobot.db import UsersTable, GuildsTable, PlayersTable
+from discord import Game
 from discord.ext import commands
+from pubgdiscobot.db import UsersTable, GuildsTable, PlayersTable
+from pubgdiscobot.config import (
+    _prefix_, _owner_id_, _version_, _extensions_, _discord_token_)
 
 
-class PUBGDiscoBot(commands.Bot):
+class PUBGDiscoBot(commands.AutoShardedBot):
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(
+            command_prefix=self.prefix_callable,
+            owner_id=_owner_id_,
+            activity=Game(name="v{}".format(_version_), type=0),
+            case_insensitive=True,
+            help_command=None
+        )
         self.db_users = UsersTable()
         self.db_guilds = GuildsTable()
         self.db_players = PlayersTable()
         self.connected_firstly = True
+
+    def prefix_callable(self, bot, msg):
+        if not msg.guild:
+            return
+        guild_id = msg.guild.id
+        guild = self.db_guilds.find_one({'id': guild_id})
+        return guild['prefix']
 
     async def on_ready(self):
         if not self.connected_firstly:
@@ -31,6 +44,7 @@ class PUBGDiscoBot(commands.Bot):
             print('Main task running')
         except Exception as err:
             print(f'Something wrong with main loop: {err}')
+        self.connected_firstly = False
 
     async def on_message(self, message):
         if message.author.id == self.user.id:
@@ -42,7 +56,8 @@ class PUBGDiscoBot(commands.Bot):
             return
 
         self.db_guilds.add(id=guild.id, name=guild.name,
-                           members=guild.member_count)
+                           members=guild.member_count,
+                           prefix=_prefix_)
 
     async def on_guild_remove(self, guild):
         if not self.db_guilds.exists(guild.id):
