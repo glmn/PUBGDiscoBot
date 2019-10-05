@@ -9,9 +9,9 @@ class NotifyCommand(Cog):
         self.bot = bot
         self.db_users = UsersTable()
 
-    @commands.command(name='notify')
+    @commands.command(name='notify-all')
     @commands.is_owner()
-    async def notify_command(self, ctx, message):
+    async def notify_all_command(self, ctx, message):
         channels = self.db_users.distinct('channel_id')
         for channel in channels:
             destination = self.bot.get_channel(channel)
