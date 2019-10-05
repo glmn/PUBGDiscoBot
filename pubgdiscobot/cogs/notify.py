@@ -1,7 +1,11 @@
 from discord.ext import commands
 from discord.ext.commands import Cog
+from discord.ext.commands.errors import (
+    NotOwner
+)
 from pubgdiscobot.db import UsersTable
 
+MSG_NOTOWNER_ERROR = '{} you are not an owner of this bot'
 
 class NotifyCommand(Cog):
 
@@ -16,6 +20,11 @@ class NotifyCommand(Cog):
         for channel in channels:
             destination = self.bot.get_channel(channel)
             await destination.send(message)
+        
+    @notify_all_command.error
+    async def notify_all_error(self, ctx, error):
+        if isinstance(error, NotOwner):
+            await ctx.send(MSG_NOTOWNER_ERROR.format(ctx.author.mention))
 
 
 def setup(bot):
