@@ -45,6 +45,15 @@ class HelpCommand(Cog):
             f'**`{prefix}help`** - Shows this help message'
         ]), inline=False)
 
+        if not ctx.author.guild_permissions.administrator:
+            await ctx.send(content='\u200b', embed=embed)
+            return
+
+        embed.add_field(name="**Admin commands**", value=''.join([
+            f'**`{prefix}prefix`** - Set custom prefix for your guild\n',
+            f'use brackets to save with space symbol `{prefix}prefix "pubg "`'
+        ]))
+
         if ctx.author.id != _owner_id_:
             await ctx.send(content='\u200b', embed=embed)
             return
