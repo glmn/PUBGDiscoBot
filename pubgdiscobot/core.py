@@ -1,5 +1,4 @@
 from discord import Game
-from bunch import bunchify
 from discord.ext import commands
 from pubgdiscobot.db import UsersTable, GuildsTable, PlayersTable
 from pubgdiscobot.config import (
@@ -46,21 +45,19 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         except Exception as err:
             print(f'Something wrong with main loop: {err}')
         self.connected_firstly = False
-        self.process_guilds()
+        await self.process_guilds()
 
     async def process_guilds(self):
         guilds_in_db = self.db_guilds.find()
         guilds_current = self.guilds
-        guilds_to_add = [guild for guild in guilds_current
-                         if guild.id not in [
-                            guild['id'] for guild in guilds_current]]
-        guilds_to_remove = [guild for guild in guilds_in_db
-                            if guild['id'] not in [
-                                guild.id for guild in guilds_current]]
-        for guild in guilds_to_add:
-            await self.on_guild_join(guild)
-        for guild in guilds_to_remove:
-            await self.on_guild_remove(guild)
+        guilds_in_db = set([guild['id'] for guild in guilds_in_db])
+        guilds_current = set([guild.id for guild in guilds_current])
+        remove_list = list(guilds_in_db - guilds_current)
+        add_list = list(guilds_current - guilds_in_db)
+        for guild_id in add_list:
+            await self.on_guild_join(guild_id)
+        for guild_id in remove_list:
+            await self.on_guild_remove(guild_id)
 
     async def on_message(self, message):
         if message.author.id == self.user.id:
@@ -68,25 +65,37 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         await self.process_commands(message)
 
     async def on_guild_join(self, guild):
+        if isinstance(guild, int):
+            _id = guild
+            guild = self.get_guild(_id)
+            if not guild:
+                print(f'guild {_id} not found')
+                return
+
         if self.db_guilds.exists(guild.id):
             return
 
+        print(f'ADD GUILD {guild.name}')
         self.db_guilds.add(id=guild.id, name=guild.name,
                            members=guild.member_count,
                            prefix=_prefix_)
 
     async def on_guild_remove(self, guild):
-        if not self.db_guilds.exists(guild.id):
+        _id = guild
+
+        if not isinstance(guild, int):
+            _id = guild.id
+
+        if not self.db_guilds.exists(_id):
             return
 
-        if isinstance(guild, dict):
-            guild = bunchify(guild)
+        print(f'REMOVE GUILD {_id}')
 
-        self.db_guilds.delete_one({'id': guild.id})
-        users = self.db_users.find({'guild_id': guild.id})
+        self.db_guilds.delete_one({'id': _id})
+        users = self.db_users.find({'guild_id': _id})
         for user in users:
             self.db_players.delete_one({'id': user['player_id']})
-        self.db_users.delete_many({'guild_id': guild.id})
+        self.db_users.delete_many({'guild_id': _id})
 
     async def on_member_remove(self, member):
         if not self.db_users.exists(member.id):
