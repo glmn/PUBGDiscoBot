@@ -1,7 +1,6 @@
 from discord.ext import commands
 from discord.ext.commands import Cog
 from pubgdiscobot.db import UsersTable
-from pubgdiscobot.config import _owner_id_
 from discord.ext.commands.errors import CheckFailure
 
 MSG_NOTOWNER_ERROR = '{} you are not an owner of this bot'
