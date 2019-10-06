@@ -45,6 +45,21 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         except Exception as err:
             print(f'Something wrong with main loop: {err}')
         self.connected_firstly = False
+        self.process_guilds()
+
+    async def process_guilds(self):
+        guilds_in_db = self.db_guilds.find()
+        guilds_current = self.guilds
+        guilds_to_add = [guild for guild in guilds_current
+                         if guild.id not in [
+                            guild['id'] for guild in guilds_current]]
+        guilds_to_remove = [guild for guild in guilds_in_db
+                            if guild['id'] not in [
+                                guild.id for guild in guilds_current]]
+        for guild in guilds_to_add:
+            await self.on_guild_join(guild)
+        for guild in guilds_to_remove:
+            await self.on_guild_remove(guild)
 
     async def on_message(self, message):
         if message.author.id == self.user.id:
