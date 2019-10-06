@@ -1,4 +1,5 @@
 from discord import Game
+from bunch import bunchify
 from discord.ext import commands
 from pubgdiscobot.db import UsersTable, GuildsTable, PlayersTable
 from pubgdiscobot.config import (
@@ -77,6 +78,9 @@ class PUBGDiscoBot(commands.AutoShardedBot):
     async def on_guild_remove(self, guild):
         if not self.db_guilds.exists(guild.id):
             return
+
+        if isinstance(guild, dict):
+            guild = bunchify(guild)
 
         self.db_guilds.delete_one({'id': guild.id})
         users = self.db_users.find({'guild_id': guild.id})
