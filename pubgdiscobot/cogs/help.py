@@ -11,7 +11,7 @@ class HelpCommand(Cog):
         self.bot = bot
         self.db_guilds = GuildsTable()
 
-    @commands.command(name='help')
+    @commands.command(name='help', aliases=['-h', 'commands', 'cmd'])
     @commands.guild_only()
     async def help_command(self, ctx):
         prefix = _prefix_
