@@ -20,12 +20,11 @@ class HelpCommand(Cog):
             guild = self.db_guilds.find_one({'id': guild_id})
             prefix = guild['prefix']
 
-        title = f"About PUBGDiscoBot `v{_version_}`"
+        title = f"PUBGDiscoBot `v{_version_}` [STEAM ONLY] "
         description = ''.join([
-            "**!IMPORTANT! This bot tracks only STEAM PUBG players**\n\n",
             "PUBGDiscoBot made with :hearts: by <@132402729887727616>\n",
             "This is an open-source project. You can find it on ",
-            "[GitHub](https://github.com/glmn/PUBGDiscoBot)"])
+            "**[GitHub](https://github.com/glmn/PUBGDiscoBot)**"])
 
         embed = discord.Embed(
             colour=discord.Colour(0x50e3c2),
@@ -34,15 +33,15 @@ class HelpCommand(Cog):
         )
 
         embed.add_field(name="**How to track player?**", value=''.join([
-            f'Type **`{prefix}reg IGN`** where IGN - ',
+            f'Type [**{prefix}reg IGN**](http://x) where IGN - ',
             'Your ingame nickname\n',
-            f'Example: ***`{prefix}reg chocoTaco`***'
+            f'Example: [***{prefix}reg chocoTaco***](http://x)'
         ]), inline=False)
 
         embed.add_field(name="**Another commands**", value=''.join([
-            f'**`{prefix}me`** - Shows your current IGN\n',
-            f'**`{prefix}last`** - Shows last TOP-3 rank match\n',
-            f'**`{prefix}help`** - Shows this help message'
+            f'[**{prefix}me**](http://x) - Shows your current IGN\n',
+            f'[**{prefix}last**](http://x) - Shows last TOP-3 rank match\n',
+            f'[**{prefix}help**](http://x) - Shows this help message'
         ]), inline=False)
 
         if not ctx.author.guild_permissions.administrator:
@@ -50,7 +49,7 @@ class HelpCommand(Cog):
             return
 
         embed.add_field(name="**Admin commands**", value=''.join([
-            f'**`{prefix}prefix`** - Set custom prefix for your guild\n',
+            f'[**{prefix}prefix**](http://x) - Set custom prefix for your guild\n',
             f'use brackets to save with space symbol `{prefix}prefix "pubg "`'
         ]))
 
@@ -59,7 +58,7 @@ class HelpCommand(Cog):
             return
 
         embed.add_field(name="**Owner commands**", value=''.join([
-            f'**`{prefix}notify-all`** - Send your message to all guilds\n'
+            f'[**{prefix}notify-all**](http://x) - Send your message to all guilds\n'
         ]))
 
         await ctx.send(content='\u200b', embed=embed)
