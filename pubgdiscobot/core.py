@@ -31,21 +31,21 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         if not self.connected_firstly:
             print('RECONNECTED!')
             return
+        print('Precessing guilds')
+        await self.process_guilds()
         print('Loading Extensions...')
-        for extension in _extensions_:
+        for ext in _extensions_:
             try:
-                self.load_extension(f'pubgdiscobot.cogs.{extension}')
-                print(f'Extension [{extension}] loaded successfuly')
+                self.load_extension(f'pubgdiscobot.cogs.{ext}')
+                print(f'Extension [{ext}] loaded successfuly')
             except Exception as err:
-                print(f'Extension [{extension}] ERROR while loading! {err}')
-
+                print(f'Extension [{ext}] ERROR while loading! {err}')
         try:
             self.loop.create_task()
             print('Main task running')
         except Exception as err:
             print(f'Something wrong with main loop: {err}')
         self.connected_firstly = False
-        await self.process_guilds()
 
     async def process_guilds(self):
         guilds_in_db = self.db_guilds.find()
@@ -71,26 +71,18 @@ class PUBGDiscoBot(commands.AutoShardedBot):
             if not guild:
                 print(f'guild {_id} not found')
                 return
-
         if self.db_guilds.exists(guild.id):
             return
-
-        print(f'ADD GUILD {guild.name}')
         self.db_guilds.add(id=guild.id, name=guild.name,
                            members=guild.member_count,
                            prefix=_prefix_)
 
     async def on_guild_remove(self, guild):
         _id = guild
-
         if not isinstance(guild, int):
             _id = guild.id
-
         if not self.db_guilds.exists(_id):
             return
-
-        print(f'REMOVE GUILD {_id}')
-
         self.db_guilds.delete_one({'id': _id})
         users = self.db_users.find({'guild_id': _id})
         for user in users:
@@ -100,7 +92,6 @@ class PUBGDiscoBot(commands.AutoShardedBot):
     async def on_member_remove(self, member):
         if not self.db_users.exists(member.id):
             return
-
         guild_id = member.guild.id
         user = self.db_users.find_one({'id': member.id, 'guild_id': guild_id})
         self.db_players.delete_one({'id': user['player_id']})
