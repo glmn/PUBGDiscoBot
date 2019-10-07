@@ -19,7 +19,7 @@ class ReloadCommand(Cog):
         try:
             self.bot.reload_extension(f'pubgdiscobot.cogs.{ext}')
             await ctx.send(f'Extension [{ext}] reloaded')
-        except:
+        except Exception:
             await ctx.send(f'Error while reloading extension [{ext}]')
 
 
