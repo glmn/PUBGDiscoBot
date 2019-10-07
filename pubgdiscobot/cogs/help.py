@@ -40,7 +40,7 @@ class HelpCommand(Cog):
 
         embed.add_field(name="**Another commands**", value=''.join([
             f'[**{prefix}me**](http://x) - Shows your current IGN\n',
-            f'[**{prefix}last**](http://x) - Shows last TOP-3 rank match\n',
+            f'[**{prefix}last**](http://x) - Shows last analyzed match\n',
             f'[**{prefix}help**](http://x) - Shows this help message'
         ]), inline=False)
 
