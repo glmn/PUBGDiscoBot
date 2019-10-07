@@ -58,7 +58,8 @@ class HelpCommand(Cog):
             return
 
         embed.add_field(name="**Owner commands**", value=''.join([
-            f'[**{prefix}notify-all**](http://x) - Send your message to all guilds\n'
+            f'[**{prefix}notify-all**](http://x) - Send your message to all guilds\n',
+            f'[**{prefix}reload**](http://x) - Reload specified extension\n'
         ]))
 
         await ctx.send(content='\u200b', embed=embed)
