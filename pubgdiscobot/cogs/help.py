@@ -14,6 +14,7 @@ class HelpCommand(Cog):
     @commands.command(name='help', aliases=['-h', 'commands', 'cmd'])
     @commands.guild_only()
     async def help_command(self, ctx):
+        lnk = 'http://x'
         prefix = _prefix_
         if ctx.guild:
             guild_id = ctx.guild.id
@@ -33,15 +34,15 @@ class HelpCommand(Cog):
         )
 
         embed.add_field(name="**How to track player?**", value=''.join([
-            f'Type [**{prefix}reg IGN**](http://x) where IGN - ',
+            f'Type [**{prefix}reg IGN**]({lnk}) where IGN - ',
             'Your ingame nickname\n',
-            f'Example: [***{prefix}reg chocoTaco***](http://x)'
+            f'Example: [***{prefix}reg chocoTaco***]({lnk})'
         ]), inline=False)
 
         embed.add_field(name="**Another commands**", value=''.join([
-            f'[**{prefix}me**](http://x) - Shows your current IGN\n',
-            f'[**{prefix}last**](http://x) - Shows last analyzed match\n',
-            f'[**{prefix}help**](http://x) - Shows this help message'
+            f'[**{prefix}me**]({lnk}) - Shows your current IGN\n',
+            f'[**{prefix}last**]({lnk}) - Shows last analyzed match\n',
+            f'[**{prefix}help**]({lnk}) - Shows this help message'
         ]), inline=False)
 
         if not ctx.author.guild_permissions.administrator:
@@ -49,7 +50,7 @@ class HelpCommand(Cog):
             return
 
         embed.add_field(name="**Admin commands**", value=''.join([
-            f'[**{prefix}prefix**](http://x) - Set custom prefix for your guild\n',
+            f'[**{prefix}prefix**]({lnk}) - Set custom prefix for your guild\n',
             f'use brackets to save with space symbol `{prefix}prefix "pubg "`'
         ]))
 
@@ -58,8 +59,8 @@ class HelpCommand(Cog):
             return
 
         embed.add_field(name="**Owner commands**", value=''.join([
-            f'[**{prefix}notify-all**](http://x) - Send your message to all guilds\n',
-            f'[**{prefix}reload**](http://x) - Reload specified extension\n'
+            f'[**{prefix}notify-all**]({lnk}) - Send your message to all guilds\n',
+            f'[**{prefix}reload**]({lnk}) - Reload specified extension\n'
         ]))
 
         await ctx.send(content='\u200b', embed=embed)
