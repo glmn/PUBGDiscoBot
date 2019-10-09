@@ -1,3 +1,5 @@
+import platform
+import discord
 from discord import Game
 from discord.ext import commands
 from pubgdiscobot.db import UsersTable, GuildsTable, PlayersTable
@@ -18,6 +20,8 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         self.db_users = UsersTable()
         self.db_guilds = GuildsTable()
         self.db_players = PlayersTable()
+        self.shard_ids = kwargs.get('shard_ids', [0])
+        self.cluster_index = round(min(self.shard_ids) / 5)
         self.connected_firstly = True
 
     def prefix_callable(self, bot, msg):
@@ -46,6 +50,22 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         except Exception as err:
             print(f'Something wrong with main loop: {err}')
         self.connected_firstly = False
+
+        print(f"""
+             _____ _____ _____ _____ ____  _             _____     _   
+            |  _  |  |  | __  |   __|    \|_|___ ___ ___| __  |___| |_ 
+            |   __|  |  | __ -|  |  |  |  | |_ -|  _| . | __ -| . |  _|
+            |__|  |_____|_____|_____|____/|_|___|___|___|_____|___|_|                                                            
+        """)
+
+        print(f"discord.py version: {discord.__version__}")
+        print(f"Python version: {platform.python_version()}")
+        print(f"Running on: {platform.system()} v{platform.version()}")
+        print(f"Discord user: {self.user} / {self.user.id}")
+        print(f"Connected guilds: {len(self.guilds)}")
+        print(f"Connected users: {len(list(self.get_all_members()))}")
+        print(f"Shard IDs: {getattr(self, 'shard_ids', None)}")
+        print(f"Cluster index: {self.cluster_index}")
 
     async def process_guilds(self):
         guilds_in_db = self.db_guilds.find()
