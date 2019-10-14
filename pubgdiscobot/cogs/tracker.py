@@ -7,7 +7,8 @@ from pubgdiscobot.config import _delay_, _pubg_tracker_token_, _pubg_shard_
 from pubgdiscobot.db import UsersTable, PlayersTable, GuildsTable
 from pubgdiscobot.render import RenderStats
 
-FOOTER_PATH = './img/footer.png'
+FOOTER_PATH = './pubgdiscobot/img/footer.png'
+
 
 class Tracker(Cog):
 
@@ -97,6 +98,7 @@ class Tracker(Cog):
         embed.set_image(url=f'attachment://{image_path}')
         embed.set_footer(url=f'attachment://{footer_path}')
         return embed
+
 
 def setup(bot):
     bot.add_cog(Tracker(bot))
