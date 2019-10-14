@@ -13,13 +13,14 @@ class HelpCommand(Cog):
 
     @commands.command(name='help', aliases=['-h', 'commands', 'cmd'])
     @commands.guild_only()
+    @commands.cooldown(rate=3, per=1)
     async def help_command(self, ctx):
         lnk = 'http://x'
-        prefix = _prefix_
+        pref = _prefix_
         if ctx.guild:
             guild_id = ctx.guild.id
             guild = self.db_guilds.find_one({'id': guild_id})
-            prefix = guild['prefix']
+            pref = guild['prefix']
 
         title = f"PUBGDiscoBot `v{_version_}` [STEAM ONLY] "
         description = ''.join([
@@ -34,15 +35,15 @@ class HelpCommand(Cog):
         )
 
         embed.add_field(name="**How to track player?**", value=''.join([
-            f'Type [**{prefix}reg IGN**]({lnk}) where IGN - ',
+            f'Type [**{pref}reg IGN**]({lnk}) where IGN - ',
             'Your ingame nickname\n',
-            f'Example: [***{prefix}reg chocoTaco***]({lnk})'
+            f'Example: [***{pref}reg chocoTaco***]({lnk})'
         ]), inline=False)
 
         embed.add_field(name="**Another commands**", value=''.join([
-            f'[**{prefix}me**]({lnk}) - Shows your current IGN\n',
-            f'[**{prefix}last**]({lnk}) - Shows last analyzed match\n',
-            f'[**{prefix}help**]({lnk}) - Shows this help message'
+            f'[**{pref}me**]({lnk}) - Shows your current IGN\n',
+            f'[**{pref}last**]({lnk}) - Shows last analyzed match\n',
+            f'[**{pref}help**]({lnk}) - Shows this help message'
         ]), inline=False)
 
         if not ctx.author.guild_permissions.administrator:
@@ -50,8 +51,8 @@ class HelpCommand(Cog):
             return
 
         embed.add_field(name="**Admin commands**", value=''.join([
-            f'[**{prefix}prefix**]({lnk}) - Set custom prefix for your guild\n',
-            f'use brackets to save with space symbol `{prefix}prefix "pubg "`'
+            f'[**{pref}prefix**]({lnk}) - Set custom prefix for your guild\n',
+            f'use brackets to save with space symbol `{pref}prefix "pubg "`'
         ]))
 
         if ctx.author.id != _owner_id_:
@@ -59,8 +60,8 @@ class HelpCommand(Cog):
             return
 
         embed.add_field(name="**Owner commands**", value=''.join([
-            f'[**{prefix}notify-all**]({lnk}) - Send your message to all guilds\n',
-            f'[**{prefix}reload**]({lnk}) - Reload specified extension\n'
+            f'[**{pref}notify-all**]({lnk}) - Send your message to all guilds\n',  # noqa: E501
+            f'[**{pref}reload**]({lnk}) - Reload specified extension\n'
         ]))
 
         await ctx.send(content='\u200b', embed=embed)
