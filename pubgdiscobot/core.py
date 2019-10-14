@@ -1,10 +1,17 @@
 import platform
 import discord
-from discord import Game
+from discord import Game, Permissions
 from discord.ext import commands
 from pubgdiscobot.db import UsersTable, GuildsTable, PlayersTable
 from pubgdiscobot.config import (
     _prefix_, _owner_id_, _version_, _extensions_, _discord_token_)
+
+MSG_BOT_LOGO = """
+ _____ _____ _____ _____ ____  _             _____     _
+|  _  |  |  | __  |   __|    \\|_|___ ___ ___| __  |___| |_
+|   __|  |  | __ -|  |  |  |  | |_ -|  _| . | __ -| . |  _|
+|__|  |_____|_____|_____|____/|_|___|___|___|_____|___|_|
+"""
 
 
 class PUBGDiscoBot(commands.AutoShardedBot):
@@ -35,29 +42,9 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         if not self.connected_firstly:
             print('RECONNECTED!')
             return
-        print('Precessing guilds')
-        await self.process_guilds()
-        print('Loading Extensions...')
-        for ext in _extensions_:
-            try:
-                self.load_extension(f'pubgdiscobot.cogs.{ext}')
-                print(f'Extension [{ext}] loaded successfuly')
-            except Exception as err:
-                print(f'Extension [{ext}] ERROR while loading! {err}')
-        try:
-            self.loop.create_task()
-            print('Main task running')
-        except Exception as err:
-            print(f'Something wrong with main loop: {err}')
-        self.connected_firstly = False
 
-        print(f"""
-             _____ _____ _____ _____ ____  _             _____     _   
-            |  _  |  |  | __  |   __|    \|_|___ ___ ___| __  |___| |_ 
-            |   __|  |  | __ -|  |  |  |  | |_ -|  _| . | __ -| . |  _|
-            |__|  |_____|_____|_____|____/|_|___|___|___|_____|___|_|                                                            
-        """)
-
+        print(MSG_BOT_LOGO)
+        print(f"PUBGDiscoBot version: {_version_}")
         print(f"discord.py version: {discord.__version__}")
         print(f"Python version: {platform.python_version()}")
         print(f"Running on: {platform.system()} v{platform.version()}")
@@ -67,6 +54,18 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         print(f"Shard IDs: {getattr(self, 'shard_ids', None)}")
         print(f"Cluster index: {self.cluster_index}")
 
+        print('Precessing guilds')
+        await self.process_guilds()
+
+        print('Loading Extensions...')
+        for ext in _extensions_:
+            try:
+                self.load_extension(f'pubgdiscobot.cogs.{ext}')
+                print(f'Extension [{ext}] loaded successfuly')
+            except Exception as err:
+                print(f'Extension [{ext}] ERROR while loading! {err}')
+        self.connected_firstly = False
+
     async def process_guilds(self):
         guilds_in_db = self.db_guilds.find()
         guilds_current = self.guilds
@@ -74,6 +73,10 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         guilds_current = set([guild.id for guild in guilds_current])
         remove_list = list(guilds_in_db - guilds_current)
         add_list = list(guilds_current - guilds_in_db)
+
+        print(f'New guilds: {len(add_list)}')
+        print(f'Removed guilds: {len(remove_list)}')
+
         for guild_id in add_list:
             await self.on_guild_join(guild_id)
         for guild_id in remove_list:
@@ -116,6 +119,12 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         user = self.db_users.find_one({'id': member.id, 'guild_id': guild_id})
         self.db_players.delete_one({'id': user['player_id']})
         self.db_users.delete_one({'id': member.id})
+
+    async def on_command_error(self, ctx, error):
+        # TODO: send message to guild owner about missed permisions
+        # embed = Embed()
+        # if isinstance(error, discord.Forbidden):
+        pass
 
     def run(self):
         super().run(_discord_token_)
