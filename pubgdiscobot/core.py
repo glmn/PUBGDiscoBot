@@ -1,7 +1,9 @@
+import traceback
 import platform
 import discord
 from discord import Game, Permissions
 from discord.ext import commands
+from pubgdiscobot.tracker import Tracker
 from pubgdiscobot.db import UsersTable, GuildsTable, PlayersTable
 from pubgdiscobot.config import (
     _prefix_, _owner_id_, _version_, _extensions_, _discord_token_)
@@ -64,6 +66,14 @@ class PUBGDiscoBot(commands.AutoShardedBot):
                 print(f'Extension [{ext}] loaded successfuly')
             except Exception as err:
                 print(f'Extension [{ext}] ERROR while loading! {err}')
+                print(traceback.format_exc())
+        print('Starting tracker')
+        try:
+            Tracker(self)
+            print('Tracker started')
+        except Exception as err:
+            print(f'Tracker error! {err}')
+
         self.connected_firstly = False
 
     async def process_guilds(self):
@@ -120,11 +130,10 @@ class PUBGDiscoBot(commands.AutoShardedBot):
         self.db_players.delete_one({'id': user['player_id']})
         self.db_users.delete_one({'id': member.id})
 
-    async def on_command_error(self, ctx, error):
+    # async def on_command_error(self, ctx, error):
         # TODO: send message to guild owner about missed permisions
         # embed = Embed()
         # if isinstance(error, discord.Forbidden):
-        pass
 
     def run(self):
         super().run(_discord_token_)

@@ -1,3 +1,4 @@
+import os
 import time
 from datetime import datetime as dt
 from PIL import Image, ImageDraw, ImageFont
@@ -43,6 +44,7 @@ class RenderStats():
     ]
 
     def __init__(self, match, roster, telemetry):
+        self.filename = ''
         self.match = match
         self.match_start = self.time_convert(match.created_at)
         self.telemetry = telemetry
@@ -216,7 +218,7 @@ class RenderStats():
     def draw_game_mode_icons(self):
         game_mode = self.match.game_mode
         icons_count = 4 if 'squad' in game_mode else len(self.teammates)
-        icon = Image.open('img/user.png', mode='r')
+        icon = Image.open('./pubgdiscobot/img/user.png', mode='r')
         padding = self.SIZES['icon_padding']
         counter = 0
         while counter < icons_count:
@@ -302,12 +304,9 @@ class RenderStats():
         duration = self.match.duration
 
         for index, mate in enumerate(self.teammates):
-            print(mate.lifetime)
             width = time_map(duration, mate.lifetime, max_width)
             self.draw.rectangle([(padding, margin), (width, margin + height)],
                                 fill=self.PINCOLORS[index])
-
-            print(duration, [kill.elapsed_time for kill in mate.kill])
             # Vehicle
             for index, ride in enumerate(mate.vehicle_rides):
                 start = time_map(duration, ride.elapsed_time, max_width)
@@ -372,4 +371,8 @@ class RenderStats():
         self.draw_timeline()
         self.crop(width, height)
         self.image.save(filename)
+        self.filename = filename
         return filename
+
+    def remove(self):
+        os.remove(self.filename)
