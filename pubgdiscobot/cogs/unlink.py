@@ -20,10 +20,10 @@ class UnlinkCommand(Cog):
         user_mention = ctx.author.mention
         user = self.db_users.find_one({'id': user_id, 'guild_id': guild_id})
         player = self.db_players.find_one({'id': user['player_id']})
-        self.db_users.remove({'id': user['id']})
+        self.db_users.delete_one({'id': user['id']})
         if self.db_users.count_documents({'player_id': player['id']}) == 0:
-            self.db_players.remove({'id': player['id']})
-        ctx.send(MSG_PLAYER_FOUND.format(user_mention, player['name']))
+            self.db_players.delete_one({'id': player['id']})
+        await ctx.send(MSG_PLAYER_FOUND.format(user_mention, player['name']))
 
 
 def setup(bot):
