@@ -65,7 +65,7 @@ class RegisterCommand(Cog):
         if not player_from_db:
             self.db_players.add(id=player_id, name=player_name,
                                 shard=_pubg_shard_.value, last_check=0,
-                                last_match_id='', matches=list())
+                                last_match='', matches=list())
         await ctx.send(MSG_ADDED.format(user_mention, player_name))
 
     def delete_unused_player(self, player_id):
