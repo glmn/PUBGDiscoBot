@@ -32,7 +32,8 @@ class Tracker():
             last_match = player_db_data['last_match']
             if match_id == player_db_data['last_match']:
                 continue
-            self.db_players.update({'id': plr.id}, {'last_match': last_match})
+            self.db_players.update(
+                {'id': plr.id}, {'$set': {'last_match': match_id}})
             match = self.pubg.matches().get(match_id)
             roster = self.find_roster(match.rosters, plr.name)
             telemetry = self.pubg.telemetry(match.assets[0].url)
