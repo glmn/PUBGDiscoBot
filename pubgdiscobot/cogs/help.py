@@ -43,6 +43,7 @@ class HelpCommand(Cog):
         embed.add_field(name="**Another commands**", value=''.join([
             f'[**{pref}me**]({lnk}) - Shows your current IGN\n',
             f'[**{pref}last**]({lnk}) - Shows last analyzed match\n',
+            f'[**{pref}vote**]({lnk}) - Shows link to vote page\n',
             f'[**{pref}help**]({lnk}) - Shows this help message'
         ]), inline=False)
 
