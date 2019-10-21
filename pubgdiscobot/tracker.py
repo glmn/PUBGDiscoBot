@@ -28,13 +28,14 @@ class Tracker():
                 '$set': {'last_check': time.time()}
             })
             player_db_data = self.db_players.find_one({'id': plr.id})
-            match_id = plr.matches[0]
-            last_match = player_db_data['last_match']
+            match_id = plr.matches[0].id
             if match_id == player_db_data['last_match']:
                 continue
             self.db_players.update(
                 {'id': plr.id}, {'$set': {'last_match': match_id}})
             match = self.pubg.matches().get(match_id)
+            if match.map_name == 'Range_Main':
+                continue
             roster = self.find_roster(match.rosters, plr.name)
             telemetry = self.pubg.telemetry(match.assets[0].url)
             send_to = self.prepare_channels(roster)
