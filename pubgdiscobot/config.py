@@ -12,6 +12,8 @@ _pubg_token_ = os.getenv("PUBG_TOKEN")
 _pubg_tracker_token_ = os.getenv("PUBG_TRACKER_TOKEN")
 _pubg_shard_ = Shard.STEAM
 
+_topgg_token_ = os.getenv("TOPGG_TOKEN")
+
 _mongodb_host_ = os.getenv("MONGODB_HOST", 'localhost')
 _mongodb_port_ = os.getenv("MONGODB_PORT", 27017)
 
