@@ -1,13 +1,14 @@
 import dbl
 import asyncio
 from discord.ext import commands
+from discord.ext.commands import Cog
 from pubgdiscobot.config import _topgg_token_
 
 
-class TopGG(commands.Cog):
+class TopGG(Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.dblpy = dbl.Client(self.bot, _topgg_token_)
+        self.dblpy = dbl.DBLClient(self.bot, _topgg_token_)
         self.updating = self.bot.loop.create_task(self.update_stats())
 
     async def update_stats(self):
