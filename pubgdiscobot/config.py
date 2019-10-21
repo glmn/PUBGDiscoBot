@@ -18,5 +18,12 @@ _mongodb_host_ = os.getenv("MONGODB_HOST", 'localhost')
 _mongodb_port_ = os.getenv("MONGODB_PORT", 27017)
 
 _owner_id_ = os.getenv("OWNER_ID", 132402729887727616)
-_extensions_ = [
-    'register', 'me', 'notify', 'prefix', 'reload', 'vote', 'topgg', 'help']
+_extensions_ = ['me',
+                'vote',
+                'help',
+                'topgg',
+                'unlink',
+                'notify',
+                'prefix',
+                'reload',
+                'register']
