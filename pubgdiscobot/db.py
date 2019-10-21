@@ -77,7 +77,7 @@ class PlayersTable(Database):
 
     def add(self, *args, **kwargs):
         fields = [
-            'id', 'name', 'shard', 'last_check', 'last_match_id', 'matches']
+            'id', 'name', 'shard', 'last_check', 'last_match', 'matches']
         super().add(fields, *args, **kwargs)
 
     def exists(self, value, key='id'):
