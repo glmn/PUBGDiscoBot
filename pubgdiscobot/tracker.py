@@ -24,11 +24,15 @@ class Tracker():
         players_list = self.db_players.find(
             {'last_check': {'$lt': time.time() - _delay_}}).limit(50)
         for plr in self.fetch_players(players_list):
-            self.update_last_check(plr)
+            self.db_players.update({'id': plr.id}, {
+                '$set': {'last_check': time.time()}
+            })
             player_db_data = self.db_players.find_one({'id': plr.id})
             match_id = plr.matches[0]
-            if match_id == player_db_data['last_match_id']:
+            last_match = player_db_data['last_match']
+            if match_id == player_db_data['last_match']:
                 continue
+            self.db_players.update({'id': plr.id}, {'last_match': last_match})
             match = self.pubg.matches().get(match_id)
             roster = self.find_roster(match.rosters, plr.name)
             telemetry = self.pubg.telemetry(match.assets[0].url)
@@ -59,11 +63,6 @@ class Tracker():
             players = self.pubg.players().filter(player_ids=player_ids)
             for player in players:
                 yield player
-
-    def update_last_check(self, player):
-        self.db_players.update({'id': player.id}, {
-            '$set': {'last_check': time.time()}
-        })
 
     def find_roster(self, rosters, player_name):
         for roster in rosters:
