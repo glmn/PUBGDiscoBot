@@ -108,7 +108,9 @@ class RenderStats():
         for pos in m_positions:
             if pos.character.account_id != mate.player_id:
                 continue
-            self.teammates[index].lifetime = pos.elapsed_time
+            timestamp = self.time_convert(pos.timestamp)
+            self.teammates[index].lifetime = round(
+                (timestamp - self.match_start).total_seconds()) - 30
 
     def calc_player_dbnos(self, index, mate, dbnos):
         self.teammates[index].dbnos = []
